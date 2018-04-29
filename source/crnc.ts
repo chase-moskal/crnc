@@ -5,7 +5,7 @@ crnc — currency conversions and formatting for the web
 
 */
 
-import {requestJson} from "./commotion"
+import {requestJson} from "commotion"
 
 export interface CurrencyExchangeRates {
 	[key: string]: number
