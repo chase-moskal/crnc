@@ -1,0 +1,26 @@
+{
+	"name": "crnc",
+	"version": "0.0.0-dev.0",
+	"description": "currency conversion and functionality for the web",
+	"keywords": [
+		"money",
+		"currency",
+		"currency-exchange"
+	],
+	"main": "dist/crnc",
+	"types": "dist/crnc.d.ts",
+	"author": "Chase Moskal <chasemoskal@gmail.com>",
+	"license": "ISC",
+	"scripts": {
+		"prepare": "node build && npm test -s",
+		"build-debug": "node build --debug",
+		"test": "jest --verbose"
+	},
+	"devDependencies": {
+		"@types/jest": "22.2.3",
+		"axx": "0.1.1-dev.1",
+		"commander": "2.15.1",
+		"jest": "22.4.3",
+		"typescript": "2.7.2"
+	}
+}
