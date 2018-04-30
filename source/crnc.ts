@@ -33,7 +33,7 @@ import currencyFormatters from "./currency-formatters"
  */
 export async function downloadRates({
 	link = "https://exchangeratesapi.io/api/latest"
-}: DownloadRatesParams): Promise<DownloadRatesResults> {
+}: DownloadRatesParams = {}): Promise<DownloadRatesResults> {
 
 	const {base, date, rates} = await requestJson({link})
 	return {
