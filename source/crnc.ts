@@ -1,109 +1,112 @@
 
 /*
 
-crnc — currency conversions and formatting for the web
+[-c-r-n-c-]
+
+currency conversions and formatting for the web
 
 */
 
 import {requestJson} from "commotion"
 
-export interface CurrencyExchangeRates {
-	[key: string]: number
-}
+import {
+	DownloadRatesParams,
+	DownloadRatesResults,
+	CurrencyExchangeRates,
+	ExchangeCurrencyParams,
+	FormattableNumber,
+	CurrencyFormatter,
+	CurrencyFormatters,
+	FormatCurrencyParams,
+	ExchangeAndFormatCurrencyParams
+} from "./interfaces"
+
+import currencyFormatters from "./currency-formatters"
 
 /**
- * Download up-to-date currency exchange information from the internet
- * - returns 'updated', the date-string of the information
- * - return 'rates', dictionary of exchange rate values
+ * DOWNLOAD RATES
+ *  + download up-to-date currency exchange information from the internet
+ *  + powered by <https://exchangeratesapi.io/> — check it out
+ *  + returns a promised results object
+ *   - 'updated', the date-string of the information
+ *   - 'rates', dictionary of exchange rate values
  */
-export async function downloadCurrencyExchangeRates(): Promise<{updated: string; rates: CurrencyExchangeRates}> {
-	const {base, date, rates} = await requestJson({link: "https://exchangeratesapi.io/api/latest"})
+export async function downloadRates({
+	link = "https://exchangeratesapi.io/api/latest"
+}: DownloadRatesParams): Promise<DownloadRatesResults> {
+
+	const {base, date, rates} = await requestJson({link})
 	return {
 		updated: date,
 		rates: {...rates, [base]: 1.0}
 	}
 }
 
-export interface ExchangeCurrencyValueParams {
-	value: number
-	input: string
-	output: string
-	rates: CurrencyExchangeRates
-}
-
 /**
- * Exchange monetary value from one currency into another
- * - returns a numeric value
+ * EXCHANGE CURRENCY
+ *  + exchange monetary value from one currency into another
+ *  + provide a 'rates' object of relativistic currency values
+ *  + returns a number
  */
-export function exchangeCurrency({value, input, output, rates}: ExchangeCurrencyValueParams): number {
-	const scrutinizeRate = (rate: number) => {
-		if (rate === undefined || rate === null || isNaN(rate))
-			throw new Error(`invalid rate "${rate}"`)
-	}
+export function exchangeCurrency({
+	value,
+	input,
+	output,
+	rates
+}: ExchangeCurrencyParams): number {
 
+	// get currency rates
 	const inputRate = rates[input]
 	const outputRate = rates[output]
-	scrutinizeRate(inputRate)
-	scrutinizeRate(outputRate)
 
+	// scrutinize currencies and rates for validity
+	const currenciesAndRates: [string, number][] = [[input, inputRate], [output, outputRate]]
+	for (const [currency, rate] of currenciesAndRates) {
+		if (rate === undefined || rate === null || isNaN(rate))
+			throw new Error(`invalid rate "${currency}"`)
+	}
+
+	// calculate exchanged currency
 	return value * (outputRate / inputRate)
 }
 
-export type CurrencyFormatter = (cents: number) => string
-
-export interface FormatCurrencyStringParams {
-	cents: number
-	currency: string
-	formatters?: { [key: string]: CurrencyFormatter }
-	locale?: string
-}
-
 /**
- * Express monetary value in human-readable format
+ * FORMAT CURRENCY
+ *  + express monetary value in human-readable format
+ *  + displays large number groupings differently based on locale
+ *  + defaults to 2 digits of precision
+ *  + you can provide your own set of currency formatters
+ *  + returns a string
  */
 export function formatCurrency({
-	cents,
+	value,
 	currency,
-	formatters,
-	locale = undefined
-}: FormatCurrencyStringParams): string {
+	locale = undefined,
+	precision = 2,
+	formatters = currencyFormatters,
+}: FormatCurrencyParams): string {
 
-	const centsToDollars = (cents: number): string => (Math.ceil(cents) / 100)
-		.toLocaleString(locale, {
-			maximumFractionDigits: 2,
-			minimumFractionDigits: 2
-		})
-
-	const centsToBitcoins = (cents: number): string => (cents / 100)
-		.toLocaleString(locale, {
-			maximumFractionDigits: 8,
-			minimumFractionDigits: 8
-		})
-
-	const formatter: CurrencyFormatter = (formatters || {
-		CAD: cents => `\$${centsToDollars(cents)} CAD`,
-		USD: cents => `\$${centsToDollars(cents)} USD`,
-		EUR: cents => `\€${centsToDollars(cents)} EUR`,
-		GBP: cents => `\£${centsToDollars(cents)} GBP`,
-		XBT: cents => `\Ƀ${centsToBitcoins(cents)} XBT`
-	})[currency]
-
+	const formatter: CurrencyFormatter = formatters[currency]
 	if (!formatter) throw new Error(`unknown formatter "${currency}"`)
-	return formatter(cents)
+	return formatter({value, precision, locale})
 }
 
 /**
- * Exchange and format money in one shot
+ * EXCHANGE AND FORMAT CURRENCY
+ *  + exchange and format money in one shot
+ *  + convenience function combining 'exchangeCurrency' and 'formatCurrency'
  */
-export function exchangeAndFormatCurrency({cents, input, output, rates, locale = undefined}: {
-	cents: number
-	input: string
-	output: string
-	rates: CurrencyExchangeRates
-	locale?: string
-}): string {
+export function exchangeAndFormatCurrency({
+	value,
+	input,
+	output,
+	rates,
+	precision = 2,
+	locale = undefined
+}: ExchangeAndFormatCurrencyParams): string {
+
 	return formatCurrency({
-		cents: exchangeCurrency({value: cents, input, output, rates}),
+		value: exchangeCurrency({value, input, output, rates}),
 		currency: output,
 		locale
 	})
