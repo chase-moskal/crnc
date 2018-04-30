@@ -12,7 +12,7 @@ export interface CurrencyExchangeRates {
 	[key: string]: number
 }
 
-export interface ExchangeCurrencyParams {
+export interface ConvertCurrencyParams {
 	value: number
 	input: string
 	output: string
@@ -33,7 +33,7 @@ export interface FormatCurrencyParams extends FormattableNumber {
 	formatters?: CurrencyFormatters
 }
 
-export interface ExchangeAndFormatCurrencyParams extends FormattableNumber {
+export interface ConvertAndFormatCurrencyParams extends FormattableNumber {
 	input: string
 	output: string
 	rates: CurrencyExchangeRates

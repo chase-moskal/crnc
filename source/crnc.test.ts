@@ -1,9 +1,9 @@
 
-import {exchangeCurrency, formatCurrency} from "./crnc"
+import {convertCurrency, formatCurrency} from "./crnc"
 
 describe("crnc", () => {
 
-	describe("exchange currency - function", () => {
+	describe("convert currency - function", () => {
 		const rates = {
 			CAD: 3.0,
 			USD: 2.0,
@@ -11,19 +11,19 @@ describe("crnc", () => {
 		}
 
 		it("converts values", async() => {
-			expect(exchangeCurrency({
+			expect(convertCurrency({
 				value: 100,
 				input: "GBP",
 				output: "USD",
 				rates
 			})).toBe(200)
-			expect(exchangeCurrency({
+			expect(convertCurrency({
 				value: 200,
 				input: "USD",
 				output: "GBP",
 				rates
 			})).toBe(100)
-			expect(exchangeCurrency({
+			expect(convertCurrency({
 				value: 60,
 				input: "CAD",
 				output: "USD",
@@ -32,7 +32,7 @@ describe("crnc", () => {
 		})
 
 		it("survives same input/output currencies", async() => {
-			expect(exchangeCurrency({
+			expect(convertCurrency({
 				value: 123,
 				input: "CAD",
 				output: "CAD",
@@ -41,25 +41,25 @@ describe("crnc", () => {
 		})
 
 		it("throws on invalid currency", async() => {
-			expect(() => exchangeCurrency({
+			expect(() => convertCurrency({
 				value: 100,
 				input: "xyz",
 				output: "USD",
 				rates
 			})).toThrow()
-			expect(() => exchangeCurrency({
+			expect(() => convertCurrency({
 				value: 100,
 				input: null,
 				output: "USD",
 				rates
 			})).toThrow()
-			expect(() => exchangeCurrency({
+			expect(() => convertCurrency({
 				value: 100,
 				input: "",
 				output: "USD",
 				rates
 			})).toThrow()
-			expect(() => exchangeCurrency({
+			expect(() => convertCurrency({
 				value: 100,
 				input: "GBP",
 				output: "xyz",

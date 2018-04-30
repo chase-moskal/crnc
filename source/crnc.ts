@@ -13,12 +13,12 @@ import {
 	DownloadRatesParams,
 	DownloadRatesResults,
 	CurrencyExchangeRates,
-	ExchangeCurrencyParams,
+	ConvertCurrencyParams,
 	FormattableNumber,
 	CurrencyFormatter,
 	CurrencyFormatters,
 	FormatCurrencyParams,
-	ExchangeAndFormatCurrencyParams
+	ConvertAndFormatCurrencyParams
 } from "./interfaces"
 
 import currencyFormatters from "./currency-formatters"
@@ -43,17 +43,17 @@ export async function downloadRates({
 }
 
 /**
- * EXCHANGE CURRENCY
+ * CONVERT CURRENCY
  *  + exchange monetary value from one currency into another
  *  + provide a 'rates' object of relativistic currency values
  *  + returns a number
  */
-export function exchangeCurrency({
+export function convertCurrency({
 	value,
 	input,
 	output,
 	rates
-}: ExchangeCurrencyParams): number {
+}: ConvertCurrencyParams): number {
 
 	// get currency rates
 	const inputRate = rates[input]
@@ -66,7 +66,7 @@ export function exchangeCurrency({
 			throw new Error(`invalid rate "${currency}"`)
 	}
 
-	// calculate exchanged currency
+	// calculate exchanged currency value
 	return value * (outputRate / inputRate)
 }
 
@@ -92,21 +92,21 @@ export function formatCurrency({
 }
 
 /**
- * EXCHANGE AND FORMAT CURRENCY
+ * CONVERT AND FORMAT CURRENCY
  *  + exchange and format money in one shot
- *  + convenience function combining 'exchangeCurrency' and 'formatCurrency'
+ *  + convenience function combining 'convertCurrency' and 'formatCurrency'
  */
-export function exchangeAndFormatCurrency({
+export function convertAndFormatCurrency({
 	value,
 	input,
 	output,
 	rates,
 	precision = 2,
 	locale = undefined
-}: ExchangeAndFormatCurrencyParams): string {
+}: ConvertAndFormatCurrencyParams): string {
 
 	return formatCurrency({
-		value: exchangeCurrency({value, input, output, rates}),
+		value: convertCurrency({value, input, output, rates}),
 		currency: output,
 		locale
 	})

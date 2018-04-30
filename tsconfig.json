@@ -8,6 +8,7 @@
 		"module": "commonjs",
 		"moduleResolution": "node",
 		"experimentalDecorators": true,
+		"noImplicitAny": true,
 		"sourceMap": true,
 		"declaration": true,
 		"jsx": "react",

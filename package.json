@@ -1,11 +1,13 @@
 {
 	"name": "crnc",
-	"version": "0.0.0-dev.3",
+	"version": "0.0.0-dev.4",
 	"description": "currency conversion and functionality for the web",
 	"keywords": [
 		"money",
 		"currency",
-		"currency-exchange"
+		"currency-exchange",
+		"currency-conversion",
+		"currency-converter"
 	],
 	"main": "dist/crnc",
 	"types": "dist/crnc.d.ts",
@@ -21,7 +23,7 @@
 		"axx": "0.1.1-dev.1",
 		"commander": "2.15.1",
 		"jest": "22.4.3",
-		"typescript": "2.7.2"
+		"typescript": "2.8.3"
 	},
 	"dependencies": {
 		"commotion": "0.0.0-dev.0"
