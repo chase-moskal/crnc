@@ -20,7 +20,7 @@
 	},
 	"devDependencies": {
 		"@types/jest": "22.2.3",
-		"axx": "0.1.1-dev.1",
+		"axx": "0.2.0",
 		"commander": "2.15.1",
 		"jest": "22.4.3",
 		"typescript": "2.8.3"
