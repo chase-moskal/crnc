@@ -1,5 +1,5 @@
 
-# [-c-r-n-c-] <br/> currency conversions and formatting
+# -c-r-n-c- <br/> currency conversions and formatting
 
 get started
 
@@ -8,13 +8,17 @@ get started
 
 primary functionality
 
-1. **`downloadRates()`**  
+1. *async function* **`downloadRates(` [params](./source/interfaces.ts#L2) `): Promise<` [results](/source/interfaces.ts#L6) `>`**  
 	download up-to-date currency exchange information from the internet
 
-2. **`convertCurrency()`**  
+2. *function* **`convertCurrency(` [params](./source/interfaces.ts#L15) `): number`**  
 	exchange monetary value from one currency into another
 
-3. **`formatCurrency()`**  
+3. *function* **`formatCurrency(` [params](./source/interfaces.ts#L31) `): string`**  
 	express monetary value as a human-readable string
 
-read the sourcecode for details — [crnc.ts](./source/crnc.ts)
+read the sourcecode for details
+
+- [crnc.ts](./source/crnc.ts)
+- [currency-formatters.ts](./source/currency-formatters.ts)
+- [interfaces.ts](./source/interfaces.ts)
