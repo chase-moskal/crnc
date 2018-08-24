@@ -17,6 +17,9 @@ primary functionality
 3. *function* **`formatCurrency(` [params](./source/interfaces.ts#L31) `): string`**  
 	express monetary value as a human-readable string
 
+4. *function* **`convertAndFormatCurrency(` [params](./source/interfaces.ts#L36) `): string`**  
+	exchange and format money in one shot
+
 read the sourcecode for details
 
 - [crnc.ts](./source/crnc.ts)
