@@ -14,8 +14,8 @@
 	"author": "Chase Moskal <chasemoskal@gmail.com>",
 	"license": "ISC",
 	"scripts": {
-		"prepare": "node build && npm test -s",
-		"build-debug": "node build --debug",
+		"prepare": "node ./build && npm test -s",
+		"build-debug": "node ./build --debug",
 		"start": "http-server",
 		"test": "jest --verbose"
 	},
@@ -28,6 +28,6 @@
 		"typescript": "3.0.1"
 	},
 	"dependencies": {
-		"commotion": "file:../commotion/commotion-0.0.0-dev.2.tgz"
+		"commotion": "0.0.0-dev.2"
 	}
 }
