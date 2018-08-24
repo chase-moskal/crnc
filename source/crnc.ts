@@ -34,7 +34,7 @@ export async function downloadRates({
 
 	const {base, date, rates} = await requestJson({link})
 	return {
-		updated: date,
+		lastUpdatedDate: date,
 		rates: {...rates, [base]: 1.0}
 	}
 }

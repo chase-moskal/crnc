@@ -4,7 +4,7 @@ export interface DownloadRatesParams {
 }
 
 export interface DownloadRatesResults {
-	updated: string
+	lastUpdatedDate: string
 	rates: CurrencyExchangeRates
 }
 
