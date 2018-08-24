@@ -1,15 +1,18 @@
 
-import {convertCurrency, formatCurrency} from "./crnc"
+import {
+	formatCurrency,
+	convertCurrency,
+	convertAndFormatCurrency
+} from "./crnc"
 
 describe("crnc", () => {
+	const rates = {
+		CAD: 3.0,
+		USD: 2.0,
+		GBP: 1.0
+	}
 
 	describe("convert currency - function", () => {
-		const rates = {
-			CAD: 3.0,
-			USD: 2.0,
-			GBP: 1.0
-		}
-
 		it("converts values", async() => {
 			expect(convertCurrency({
 				value: 100,
@@ -111,8 +114,30 @@ describe("crnc", () => {
 			})).toBe("$1,234,568 CAD")
 		})
 
+		it("respects precision", async() => {
+			expect(convertAndFormatCurrency({
+				rates,
+				value: 123,
+				precision: 0,
+				input: "CAD",
+				output: "CAD"
+			})).toBe("$123 CAD")
+		})
+
 		it("throws on unknown currency", async() => {
 			expect(() => formatCurrency({value: 123, currency: "xyz", locale})).toThrow()
+		})
+	})
+
+	describe("convert and format currency - function", () => {
+		it("respects precision", async() => {
+			expect(convertAndFormatCurrency({
+				rates,
+				value: 60,
+				precision: 0,
+				input: "CAD",
+				output: "USD"
+			})).toBe("$40 USD")
 		})
 	})
 })

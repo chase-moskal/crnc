@@ -1,7 +1,7 @@
 
 /*
 
-[-c-r-n-c-]
+-c-r-n-c-
 
 currency conversions and formatting for the web
 
@@ -12,11 +12,8 @@ import {requestJson} from "commotion"
 import {
 	DownloadRatesParams,
 	DownloadRatesResults,
-	CurrencyExchangeRates,
 	ConvertCurrencyParams,
-	FormattableNumber,
 	CurrencyFormatter,
-	CurrencyFormatters,
 	FormatCurrencyParams,
 	ConvertAndFormatCurrencyParams
 } from "./interfaces"
@@ -61,6 +58,7 @@ export function convertCurrency({
 
 	// scrutinize currencies and rates for validity
 	const currenciesAndRates: [string, number][] = [[input, inputRate], [output, outputRate]]
+
 	for (const [currency, rate] of currenciesAndRates) {
 		if (rate === undefined || rate === null || isNaN(rate))
 			throw new Error(`invalid rate "${currency}"`)
@@ -81,8 +79,8 @@ export function convertCurrency({
 export function formatCurrency({
 	value,
 	currency,
-	locale = undefined,
 	precision = 2,
+	locale = undefined,
 	formatters = currencyFormatters,
 }: FormatCurrencyParams): string {
 
@@ -99,15 +97,16 @@ export function formatCurrency({
 export function convertAndFormatCurrency({
 	value,
 	input,
-	output,
 	rates,
+	output,
 	precision = 2,
 	locale = undefined
 }: ConvertAndFormatCurrencyParams): string {
 
 	return formatCurrency({
-		value: convertCurrency({value, input, output, rates}),
+		locale,
+		precision,
 		currency: output,
-		locale
+		value: convertCurrency({value, input, output, rates})
 	})
 }
