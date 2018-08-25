@@ -2,8 +2,8 @@
 import {requestJson} from "commotion"
 
 import {
-	DownloadRatesParams,
-	DownloadRatesResults
+	DownloadExchangeRatesParams,
+	DownloadExchangeRatesResults
 } from "./interfaces"
 
 /**
@@ -16,7 +16,7 @@ import {
  */
 export async function downloadExchangeRates({
 	ratesLink = "https://api.exchangeratesapi.io/latest"
-}: DownloadRatesParams = {}): Promise<DownloadRatesResults> {
+}: DownloadExchangeRatesParams = {}): Promise<DownloadExchangeRatesResults> {
 
 	const {base, date, rates} = await requestJson({link: ratesLink})
 	return {

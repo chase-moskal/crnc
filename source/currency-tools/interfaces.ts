@@ -1,9 +1,9 @@
 
-export interface DownloadRatesParams {
+export interface DownloadExchangeRatesParams {
 	ratesLink?: string
 }
 
-export interface DownloadRatesResults {
+export interface DownloadExchangeRatesResults {
 	lastUpdatedDate: string
 	exchangeRates: CurrencyExchangeRates
 }
