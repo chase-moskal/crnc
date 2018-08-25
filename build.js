@@ -21,7 +21,9 @@ async function build({debug, paths}) {
 
 	await axx(`rm -rf dist && mkdir dist`)
 	await axx(`${nb}tsc${debug ? " --target es6" : ""}`, caxx())
-	await axx(`${nb}browserify -p [ tsify ] source/global.ts > dist/global.bundle.js`)
+	await axx(`${nb}browserify -p [ tsify ] source/global.ts > dist/global.bundle.js`, caxx())
+
+	console.log(`✔ done ${debug ? "debug" : "production"} build`)
 }
 
 commander
@@ -30,7 +32,5 @@ commander
 
 build({
 	debug: commander.debug,
-	paths: {
-		nb: "$(npm bin)/",
-	}
+	paths: {nb: "$(npm bin)/"}
 })

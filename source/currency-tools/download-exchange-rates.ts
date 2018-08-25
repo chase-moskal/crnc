@@ -15,10 +15,10 @@ import {
  *   - 'rates', dictionary of exchange rate values
  */
 export async function downloadExchangeRates({
-	link = "https://api.exchangeratesapi.io/latest"
+	ratesLink = "https://api.exchangeratesapi.io/latest"
 }: DownloadRatesParams = {}): Promise<DownloadRatesResults> {
 
-	const {base, date, rates} = await requestJson({link})
+	const {base, date, rates} = await requestJson({link: ratesLink})
 	return {
 		lastUpdatedDate: date,
 		exchangeRates: {...rates, [base]: 1.0}
