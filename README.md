@@ -1,5 +1,6 @@
 
-# -c-r-n-c- <br/> currency conversions and formatting
+# -c-r-n-c-
+## currency conversions and formatting for the web
 
 get started
 

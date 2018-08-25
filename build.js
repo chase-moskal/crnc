@@ -12,8 +12,8 @@ BUILD SCRIPT CLI
 
 */
 
+const {axx, caxx} = require("axx")
 const commander = require("commander")
-const {axx, maxx, raxx, waxx, caxx} = require("axx")
 
 async function build({debug, paths}) {
 	const {nb} = paths
@@ -21,6 +21,7 @@ async function build({debug, paths}) {
 
 	await axx(`rm -rf dist && mkdir dist`)
 	await axx(`${nb}tsc${debug ? " --target es6" : ""}`, caxx())
+	await axx(`${nb}browserify -p [ tsify ] source/global.ts > dist/global.bundle.js`)
 }
 
 commander

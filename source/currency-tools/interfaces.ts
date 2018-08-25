@@ -5,7 +5,7 @@ export interface DownloadRatesParams {
 
 export interface DownloadRatesResults {
 	lastUpdatedDate: string
-	rates: CurrencyExchangeRates
+	exchangeRates: CurrencyExchangeRates
 }
 
 export interface CurrencyExchangeRates {
@@ -14,9 +14,9 @@ export interface CurrencyExchangeRates {
 
 export interface ConvertCurrencyParams {
 	value: number
-	input: string
-	output: string
-	rates: CurrencyExchangeRates
+	inputCurrency: string
+	outputCurrency: string
+	exchangeRates: CurrencyExchangeRates
 }
 
 export interface FormattableNumber {
@@ -34,7 +34,7 @@ export interface FormatCurrencyParams extends FormattableNumber {
 }
 
 export interface ConvertAndFormatCurrencyParams extends FormattableNumber {
-	input: string
-	output: string
-	rates: CurrencyExchangeRates
+	inputCurrency: string
+	outputCurrency: string
+	exchangeRates: CurrencyExchangeRates
 }
