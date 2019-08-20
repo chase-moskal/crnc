@@ -14,7 +14,7 @@ export interface AssumeUserCurrencyParams {
 export interface AscertainEcommerceDetailsParams {
 	storeBaseCurrency: string
 	userDisplayCurrency: string
-	ratesLink?: string
+	ratesUrl?: string
 }
 
 export interface EcommerceDetails {

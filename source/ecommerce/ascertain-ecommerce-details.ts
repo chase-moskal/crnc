@@ -11,12 +11,12 @@ import {
  *  - attempt to download rates, and upon failure, avoid currency conversions
  */
 export async function ascertainEcommerceDetails({
-	ratesLink,
+	ratesUrl,
 	storeBaseCurrency,
 	userDisplayCurrency
 }: AscertainEcommerceDetailsParams): Promise<EcommerceDetails> {
 	try {
-		const {exchangeRates} = await downloadExchangeRates({ratesLink})
+		const {exchangeRates} = await downloadExchangeRates({ratesUrl})
 		return {
 			exchangeRates,
 			storeBaseCurrency,

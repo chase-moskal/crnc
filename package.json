@@ -1,7 +1,32 @@
 {
 	"name": "crnc",
-	"version": "0.0.0-dev.12",
+	"version": "0.0.0-dev.13",
 	"description": "currency conversion and functionality for the web",
+	"license": "ISC",
+	"main": "dist",
+	"types": "dist/index.d.ts",
+	"author": "Chase Moskal <chasemoskal@gmail.com>",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"prepare": "run-s clean compile",
+		"clean": "rimraf dist",
+		"compile": "tsc",
+		"start": "serve",
+		"test": "jest --verbose"
+	},
+	"devDependencies": {
+		"@types/jest": "^24.0.18",
+		"jest": "^24.9.0",
+		"npm-run-all": "^4.1.5",
+		"rimraf": "^3.0.0",
+		"serve": "^11.1.0",
+		"typescript": "^3.5.3"
+	},
+	"dependencies": {
+		"commotion": "0.1.0-dev.0"
+	},
 	"keywords": [
 		"money",
 		"currency",
@@ -9,29 +34,5 @@
 		"currency-conversion",
 		"currency-converter",
 		"exchange-rates"
-	],
-	"main": "dist",
-	"types": "dist/index.d.ts",
-	"author": "Chase Moskal <chasemoskal@gmail.com>",
-	"license": "ISC",
-	"scripts": {
-		"prepare": "node ./build && npm test -s",
-		"build-debug": "node ./build --debug",
-		"start": "http-server",
-		"test": "jest --verbose"
-	},
-	"devDependencies": {
-		"@types/jest": "23.3.1",
-		"axx": "0.2.0",
-		"browserify": "16.2.2",
-		"commander": "2.17.1",
-		"http-server": "0.11.1",
-		"jest": "23.5.0",
-		"tsify": "4.0.0",
-		"typescript": "3.0.1"
-	},
-	"dependencies": {
-		"commotion": "0.0.0-dev.2",
-		"locale2": "2.3.1"
-	}
+	]
 }

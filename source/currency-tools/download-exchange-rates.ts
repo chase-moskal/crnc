@@ -1,5 +1,5 @@
 
-import {requestJson} from "commotion"
+import {requestJson} from "commotion/dist/request-json.js"
 
 import {
 	DownloadExchangeRatesParams,
@@ -15,10 +15,10 @@ import {
  *   - 'rates', dictionary of exchange rate values
  */
 export async function downloadExchangeRates({
-	ratesLink = "https://api.exchangeratesapi.io/latest"
+	ratesUrl = "https://api.exchangeratesapi.io/latest"
 }: DownloadExchangeRatesParams = {}): Promise<DownloadExchangeRatesResults> {
 
-	const {base, date, rates} = await requestJson({link: ratesLink})
+	const {base, date, rates} = await requestJson({url: ratesUrl})
 	return {
 		lastUpdatedDate: date,
 		exchangeRates: {...rates, [base]: 1.0}

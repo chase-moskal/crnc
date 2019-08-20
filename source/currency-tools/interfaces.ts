@@ -1,6 +1,6 @@
 
 export interface DownloadExchangeRatesParams {
-	ratesLink?: string
+	ratesUrl?: string
 }
 
 export interface DownloadExchangeRatesResults {
