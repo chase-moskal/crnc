@@ -1,5 +1,5 @@
 
-import {FormattableNumber, CurrencyFormatters} from "./interfaces"
+import {FormattableNumber, CurrencyFormatters} from "./interfaces.js"
 
 /**
  * Round a number to the desired number of decimal places

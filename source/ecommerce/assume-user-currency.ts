@@ -1,7 +1,7 @@
 
 import * as locale2 from "locale2"
-import {AssumeUserCurrencyParams} from "./interfaces"
-import {localesToCurrencies as defaultLocalesToCurrencies} from "./locales-to-currencies"
+import {AssumeUserCurrencyParams} from "./interfaces.js"
+import {localesToCurrencies as defaultLocalesToCurrencies} from "./locales-to-currencies.js"
 
 /**
  * Assume what currency the user might want to see

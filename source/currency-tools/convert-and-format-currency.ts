@@ -1,10 +1,7 @@
 
-import {
-	ConvertAndFormatCurrencyParams
-} from "./interfaces"
-
-import {formatCurrency} from "./format-currency"
-import {convertCurrency} from "./convert-currency"
+import {formatCurrency} from "./format-currency.js"
+import {convertCurrency} from "./convert-currency.js"
+import {ConvertAndFormatCurrencyParams} from "./interfaces.js"
 
 /**
  * Convert and format currency

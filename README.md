@@ -2,7 +2,6 @@
 # -c-r-n-c- <br/> currency conversions and formatting for the web
 
 - works with [exchangeratesapi.io](https://exchangeratesapi.io/) out of the box
-- commonjs modules to be used in-browser
 - `npm install crnc`  
 	`import {downloadExchangeRates, convertAndFormatCurrency} from "crnc"`
 

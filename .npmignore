@@ -1,9 +1,0 @@
-
-/.vscode
-/coverage
-/source
-
-/.travis.yml
-/build.js
-/tsconfig.json
-/*.tgz

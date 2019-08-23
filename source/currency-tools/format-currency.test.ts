@@ -1,7 +1,7 @@
 
-import {exchangeRates} from "./testing-tools"
-import {formatCurrency} from "./format-currency"
-import {convertAndFormatCurrency} from "./convert-and-format-currency"
+import {exchangeRates} from "./testing-tools.js"
+import {formatCurrency} from "./format-currency.js"
+import {convertAndFormatCurrency} from "./convert-and-format-currency.js"
 
 describe("format currency - function", () => {
 	const locale = "en-US"

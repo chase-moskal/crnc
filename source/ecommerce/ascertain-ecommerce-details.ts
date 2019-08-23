@@ -1,10 +1,6 @@
 
-import {downloadExchangeRates} from "../currency-tools/download-exchange-rates"
-
-import {
-	EcommerceDetails,
-	AscertainEcommerceDetailsParams
-} from "./interfaces"
+import {EcommerceDetails, AscertainEcommerceDetailsParams} from "./interfaces.js"
+import {downloadExchangeRates} from "../currency-tools/download-exchange-rates.js"
 
 /**
  * Establish some ecommerce-related currency details

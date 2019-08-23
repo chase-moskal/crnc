@@ -1,6 +1,6 @@
 
-import {exchangeRates} from "./testing-tools"
-import {convertCurrency} from "./convert-currency"
+import {exchangeRates} from "./testing-tools.js"
+import {convertCurrency} from "./convert-currency.js"
 
 describe("convert currency - function", () => {
 	it("converts values", async() => {

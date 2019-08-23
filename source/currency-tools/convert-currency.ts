@@ -1,7 +1,5 @@
 
-import {
-	ConvertCurrencyParams,
-} from "./interfaces"
+import {ConvertCurrencyParams} from "./interfaces.js"
 
 /**
  * Convert currency

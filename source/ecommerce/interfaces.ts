@@ -1,5 +1,5 @@
 
-import {CurrencyExchangeRates} from "../currency-tools/interfaces"
+import {CurrencyExchangeRates} from "../currency-tools/interfaces.js"
 
 export interface LocalesToCurrencies {
 	[locale: string]: string
