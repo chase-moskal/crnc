@@ -13,10 +13,10 @@
 2. *function* **[convertCurrency](./source/currency-tools/convert-currency.ts) `(` [params](./source/currency-tools/interfaces.ts#L15) `): number`**  
 	exchange monetary value from one currency into another
 
-3. *function* **[formatCurrency](./source/currency-tools/format-currency.ts) `(` [params](./source/currency-tools/interfaces.ts#L31) `): string`**  
+3. *function* **[formatCurrency](./source/currency-tools/format-currency.ts) `(` [params](./source/currency-tools/interfaces.ts#L31) `): Money`**  
 	express monetary value as a human-readable string
 
-4. *function* **[convertAndFormatCurrency](./source/currency-tools/convert-and-format-currency.ts) `(` [params](./source/currency-tools/interfaces.ts#L36) `): string`**  
+4. *function* **[convertAndFormatCurrency](./source/currency-tools/convert-and-format-currency.ts) `(` [params](./source/currency-tools/interfaces.ts#L36) `): Money`**  
 	exchange and format money in one shot
 
 ### ecommerce
