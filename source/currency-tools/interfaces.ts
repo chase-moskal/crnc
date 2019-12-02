@@ -25,7 +25,15 @@ export interface FormattableNumber {
 	locale?: string
 }
 
-export type CurrencyFormatter = (formattable: FormattableNumber) => string
+export interface Money {
+	code: string //---- "USD"
+	value: number //--- 1234.56
+	local: string //- "1,234.56"
+	symbol: string //-- "$",
+	total: string //--- "$1,234.56 USD"
+}
+
+export type CurrencyFormatter = (formattable: FormattableNumber) => Money
 export type CurrencyFormatters = { [key: string]: CurrencyFormatter }
 
 export interface FormatCurrencyParams extends FormattableNumber {

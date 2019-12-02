@@ -1,6 +1,6 @@
 
 import {currencyFormatters} from "./currency-formatters.js"
-import {CurrencyFormatter, FormatCurrencyParams} from "./interfaces.js"
+import {CurrencyFormatter, FormatCurrencyParams, Money} from "./interfaces.js"
 
 /**
  * Format currency
@@ -16,7 +16,7 @@ export function formatCurrency({
 	precision = 2,
 	locale = undefined,
 	formatters = currencyFormatters,
-}: FormatCurrencyParams): string {
+}: FormatCurrencyParams): Money {
 
 	const formatter: CurrencyFormatter = formatters[currency]
 	if (!formatter) throw new Error(`unknown formatter "${currency}"`)

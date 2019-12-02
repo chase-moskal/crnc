@@ -1,5 +1,9 @@
 
-import {FormattableNumber, CurrencyFormatters} from "./interfaces.js"
+import {
+	Money,
+	FormattableNumber,
+	CurrencyFormatters,
+} from "./interfaces.js"
 
 /**
  * Round a number to the desired number of decimal places
@@ -19,13 +23,41 @@ function localize({value, precision, locale}: FormattableNumber): string {
 	})
 }
 
+function formatCurrency(
+	formattable: FormattableNumber,
+	{code, symbol}: {
+		code: string
+		symbol: string
+	}
+): Money {
+	const {value} = formattable
+	const local = localize(formattable)
+	const total = `${symbol}${local} ${code}`
+	return {code, symbol, local, value, total}
+}
+
 /**
  * Formatter functions for each world currency
  */
 export const currencyFormatters = <CurrencyFormatters>{
-	CAD: formattable => `\$${localize(formattable)} CAD`,
-	USD: formattable => `\$${localize(formattable)} USD`,
-	EUR: formattable => `\€${localize(formattable)} EUR`,
-	GBP: formattable => `\£${localize(formattable)} GBP`,
-	XBT: formattable => `\Ƀ${localize(formattable)} XBT`
+	CAD: formattable => formatCurrency(formattable, {
+		code: "CAD",
+		symbol: "$",
+	}),
+	USD: formattable => formatCurrency(formattable, {
+		code: "USD",
+		symbol: "$",
+	}),
+	EUR: formattable => formatCurrency(formattable, {
+		code: "EUR",
+		symbol: "€",
+	}),
+	GBP: formattable => formatCurrency(formattable, {
+		code: "GBP",
+		symbol: "£",
+	}),
+	XBT: formattable => formatCurrency(formattable, {
+		code: "XBT",
+		symbol: "Ƀ",
+	}),
 }
