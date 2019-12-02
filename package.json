@@ -1,24 +1,28 @@
 {
 	"name": "crnc",
-	"version": "0.0.0-dev.14",
+	"version": "0.0.0-dev.15",
 	"description": "currency conversion and functionality for the web",
 	"license": "ISC",
 	"main": "dist",
 	"types": "dist/index.d.ts",
 	"author": "Chase Moskal <chasemoskal@gmail.com>",
 	"files": [
-		"dist"
+		"dist",
+		"source"
 	],
 	"scripts": {
-		"prepare": "run-s clean compile",
-		"clean": "rimraf dist",
+		"prepare": "run-s clean && run-p compile importmap",
+		"clean": "rimraf dist && mkdirp dist",
 		"compile": "tsc",
+		"importmap": "importly < package.json > dist/importmap.json",
 		"start": "serve",
 		"test": "jest --verbose"
 	},
 	"devDependencies": {
 		"@types/jest": "^24.0.23",
+		"importly": "0.1.0-dev.0",
 		"jest": "^24.9.0",
+		"mkdirp": "^0.5.1",
 		"npm-run-all": "^4.1.5",
 		"rimraf": "^3.0.0",
 		"serve": "^11.2.0",

@@ -1,5 +1,5 @@
 
-import * as locale2 from "locale2"
+import {locale2} from "./locale2.js"
 
 import {formatCurrency} from "./currency-tools/format-currency.js"
 import {assumeUserCurrency} from "./ecommerce/assume-user-currency.js"

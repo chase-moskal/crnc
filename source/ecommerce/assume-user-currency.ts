@@ -1,5 +1,5 @@
 
-import * as locale2 from "locale2"
+import {locale2} from "../locale2.js"
 import {AssumeUserCurrencyParams} from "./interfaces.js"
 import {localesToCurrencies as defaultLocalesToCurrencies} from "./locales-to-currencies.js"
 
@@ -10,7 +10,7 @@ import {localesToCurrencies as defaultLocalesToCurrencies} from "./locales-to-cu
  */
 export function assumeUserCurrency({
 	fallback,
-	locale = locale2,
+	locale = locale2(),
 	localesToCurrencies = defaultLocalesToCurrencies
 }: AssumeUserCurrencyParams): string {
 	return localesToCurrencies[locale.toLowerCase()] || fallback

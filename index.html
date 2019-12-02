@@ -5,6 +5,16 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>
 	<title>crnc — currency conversion and formatting</title>
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton:400,800"/>
+	<style>
+		html {
+			background: #222;
+			color: #aaa;
+		}
+	</style>
+
+	<script type="importmap-shim" src="./dist/importmap.json"></script>
+	<script type="module-shim" src="./dist/demo.js"></script>
+	<script defer src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
 </head>
 <body>
 	<header class="siteheader">
@@ -18,9 +28,5 @@
 			<p>points to <a href="https://exchangeratesapi.io/">exchangeratesapi.io</a>'s api by default</p>
 		</div>
 	</header>
-	<script src="dist/global.bundle.js"></script>
-	<script>
-		crncDemo()
-	</script>
 </body>
 </html>

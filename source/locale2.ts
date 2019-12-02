@@ -84,6 +84,6 @@ function getLocale(locale: any) {
 	return locale
 }
 
-export function locale2(locale: any) {
+export function locale2(locale?: any) {
 	return formatLocale(getLocale(locale))
 }
