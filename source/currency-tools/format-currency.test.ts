@@ -11,20 +11,20 @@ describe("format currency - function", () => {
 			value: 1.23,
 			currency: "CAD",
 			locale
-		}).total).toBe("$1.23 CAD")
+		}).price).toBe("$1.23 CAD")
 
 		expect(formatCurrency({
 			value: 1234.56,
 			currency: "CAD",
 			locale
-		}).total).toBe("$1,234.56 CAD")
+		}).price).toBe("$1,234.56 CAD")
 
 		expect(formatCurrency({
 			value: 1.23,
 			currency: "XBT",
 			precision: 8,
 			locale
-		}).total).toBe("Ƀ1.23000000 XBT")
+		}).price).toBe("Ƀ1.23000000 XBT")
 	})
 
 	it("rounds numbers", async() => {
@@ -32,18 +32,18 @@ describe("format currency - function", () => {
 			value: 1.234,
 			currency: "CAD",
 			locale
-		}).total).toBe("$1.23 CAD")
+		}).price).toBe("$1.23 CAD")
 		expect(formatCurrency({
 			value: 1.235,
 			currency: "CAD",
 			locale
-		}).total).toBe("$1.24 CAD")
+		}).price).toBe("$1.24 CAD")
 		expect(formatCurrency({
 			value: 1234567.89,
 			currency: "CAD",
 			precision: 0,
 			locale
-		}).total).toBe("$1,234,568 CAD")
+		}).price).toBe("$1,234,568 CAD")
 	})
 
 	it("respects precision", async() => {
@@ -53,7 +53,7 @@ describe("format currency - function", () => {
 			precision: 0,
 			inputCurrency: "CAD",
 			outputCurrency: "CAD"
-		}).total).toBe("$123 CAD")
+		}).price).toBe("$123 CAD")
 	})
 
 	it("throws on unknown currency", async() => {

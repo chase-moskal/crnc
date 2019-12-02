@@ -3,7 +3,7 @@ import {
 	Money,
 	FormattableNumber,
 	CurrencyFormatters,
-} from "./interfaces.js"
+} from "../interfaces.js"
 
 /**
  * Round a number to the desired number of decimal places
@@ -31,9 +31,9 @@ function formatCurrency(
 	}
 ): Money {
 	const {value} = formattable
-	const local = localize(formattable)
-	const total = `${symbol}${local} ${code}`
-	return {code, symbol, local, value, total}
+	const amount = localize(formattable)
+	const price = `${symbol}${amount} ${code}`
+	return {code, symbol, amount, value, price}
 }
 
 /**

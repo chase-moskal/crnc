@@ -4,7 +4,7 @@ import {requestJson} from "commotion/dist/request-json.js"
 import {
 	DownloadExchangeRatesParams,
 	DownloadExchangeRatesResults
-} from "./interfaces"
+} from "../interfaces"
 
 /**
  * Download exchange rates

@@ -1,6 +1,6 @@
 
 import {currencyFormatters} from "./currency-formatters.js"
-import {CurrencyFormatter, FormatCurrencyParams, Money} from "./interfaces.js"
+import {CurrencyFormatter, FormatCurrencyParams, Money} from "../interfaces.js"
 
 /**
  * Format currency

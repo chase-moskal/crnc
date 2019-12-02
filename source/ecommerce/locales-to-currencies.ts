@@ -1,5 +1,5 @@
 
-import {LocalesToCurrencies} from "./interfaces.js"
+import {LocalesToCurrencies} from "../interfaces.js"
 
 export const localesToCurrencies: LocalesToCurrencies = Object.freeze({
 	"en-ca": "CAD",

@@ -1,6 +1,6 @@
 
 import {locale2} from "../locale2.js"
-import {AssumeUserCurrencyParams} from "./interfaces.js"
+import {AssumeUserCurrencyParams} from "../interfaces.js"
 import {localesToCurrencies as defaultLocalesToCurrencies} from "./locales-to-currencies.js"
 
 /**

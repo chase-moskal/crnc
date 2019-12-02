@@ -1,5 +1,5 @@
 
-import {EcommerceDetails, AscertainEcommerceDetailsParams} from "./interfaces.js"
+import {EcommerceDetails, AscertainEcommerceDetailsParams} from "../interfaces.js"
 import {downloadExchangeRates} from "../currency-tools/download-exchange-rates.js"
 
 /**

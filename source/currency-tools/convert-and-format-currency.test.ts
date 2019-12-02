@@ -10,6 +10,6 @@ describe("convert and format currency - function", () => {
 			precision: 0,
 			inputCurrency: "CAD",
 			outputCurrency: "USD"
-		}).total).toBe("$40 USD")
+		}).price).toBe("$40 USD")
 	})
 })
