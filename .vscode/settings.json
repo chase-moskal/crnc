@@ -9,7 +9,8 @@
 	"files.exclude": {
 		"coverage": true,
 		"node_modules": true,
-		"*.log*": true
+		"*.log*": true,
+		"package-lock.json": true,
 	},
 
 	"search.exclude": {
