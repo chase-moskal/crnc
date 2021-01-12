@@ -29,7 +29,7 @@ async function crncDemo() {
 
 	// log the results to the console
 	const start = formatCurrency({value, code: inputCurrency})
-	console.log(`crnc demo: convert ${start} into ${result}`)
+	console.log(`crnc demo: convert ${start.price} into ${result.price}`)
 
 	// ecommerce experiment
 	const details = await ascertainEcommerceDetails({

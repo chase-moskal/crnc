@@ -6,16 +6,16 @@
 	"type": "module",
 	"author": "Chase Moskal <chasemoskal@gmail.com>",
 	"files": [
-		"dist",
-		"source"
+		"x",
+		"s"
 	],
 	"scripts": {
 		"prepare": "run-s clean && run-p compile importmap && run-s test",
-		"clean": "rimraf dist && mkdirp dist",
+		"clean": "rimraf x && mkdirp x",
 		"compile": "tsc",
-		"importmap": "importly < package.json > dist/importmap.json",
+		"importmap": "importly --host=unpkg < package.json > x/importmap.json",
 		"start": "serve",
-		"test": "cynic node dist/tests.test.js"
+		"test": "cynic node x/tests.test.js"
 	},
 	"devDependencies": {
 		"cynic": "^0.1.0-dev.14",
