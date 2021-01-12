@@ -1,28 +1,35 @@
 
 # -c-r-n-c- <br/> currency conversions and formatting for the web
 
-- works with [exchangeratesapi.io](https://exchangeratesapi.io/) out of the box
-- `npm install crnc`  
-	`import {downloadExchangeRates, convertAndFormatCurrency} from "crnc"`
+`npm install crnc`
 
-### currency tools
+- this is the currency library for [shopper](https://github.com/chase-moskal/shopper)
+- preconfigured to work with [exchangeratesapi.io](https://exchangeratesapi.io/) out of the box
+- lackluster documentation, so you're going to need to read the source to learn any details.. so sorry
+- open source, contributions welcome
 
-1. *async function* **[downloadExchangeRates](./source/currency-tools/download-exchange-rates.ts) `(` [params](./source/currency-tools/interfaces.ts#L2) `): Promise<` [results](/source/currency-tools/interfaces.ts#L6) `>`**  
-	download up-to-date currency exchange information from the internet
+### crnc is a collection of handy functions
 
-2. *function* **[convertCurrency](./source/currency-tools/convert-currency.ts) `(` [params](./source/currency-tools/interfaces.ts#L15) `): number`**  
-	exchange monetary value from one currency into another
+currency tools
 
-3. *function* **[formatCurrency](./source/currency-tools/format-currency.ts) `(` [params](./source/currency-tools/interfaces.ts#L31) `): Money`**  
-	express monetary value as a human-readable string
+- [downloadExchangeRates](./s/currency-tools/download-exchange-rates.ts)  
+	download up-to-date currency exchange info from the internet
 
-4. *function* **[convertAndFormatCurrency](./source/currency-tools/convert-and-format-currency.ts) `(` [params](./source/currency-tools/interfaces.ts#L36) `): Money`**  
-	exchange and format money in one shot
+- [convertCurrency](./s/currency-tools/convert-currency.ts)  
+	exchange a money value from one currency to another
 
-### ecommerce
+- [formatCurrency](./s/currency-tools/format-currency.ts)  
+	express a money value as a human-readable string  
+	(adds dollar signs and commas and stuff)
 
-1. *async function* **[ascertainEcommerceDetails](./source/ecommerce/ascertain-ecommerce-details.ts) `(` [params](./source/ecommerce/interfaces.ts#L14) `): Promise<` [details](./source/ecommerce/interfaces.ts#L20) `>`**  
-	establish some ecommerce-related currency details
+- [convertAndFormatCurrency](./s/currency-tools/convert-and-format-currency.ts)  
+	exchange a money value, and format it, in one shot  
+	(simply a convenience function, combines the two above)
 
-2. *function* **[assumeUserCurrency](./source/ecommerce/assume-user-currency.ts) `(` [params](./source/ecommerce/interfaces.ts#L8) `): string`**  
+ecommerce helpers
+
+- [ascertainEcommerceDetails](./s/ecommerce/ascertain-ecommerce-details.ts)  
+	some logic to retrieve exchange rates, or fall back onto a dud (where no conversions occur)
+
+- [assumeUserCurrency](./s/ecommerce/assume-user-currency.ts)  
 	assume what currency the user might want to see
