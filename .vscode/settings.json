@@ -13,7 +13,7 @@
 	},
 
 	"search.exclude": {
-		"dist": true
+		"x": true
 	},
 
 	"typescript.tsdk": "node_modules/typescript/lib/"

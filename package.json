@@ -3,21 +3,20 @@
 	"version": "0.0.0-dev.19",
 	"description": "currency conversion and functionality for the web",
 	"license": "ISC",
-	"main": "dist",
 	"type": "module",
 	"author": "Chase Moskal <chasemoskal@gmail.com>",
 	"files": [
-		"dist",
-		"source"
+		"x",
+		"s"
 	],
 	"scripts": {
-		"prepare": "run-s clean && run-p compile importmap",
-		"clean": "rimraf dist && mkdirp dist",
+		"prepare": "run-s clean && run-p compile importmap && run-s test",
+		"clean": "rimraf x && mkdirp x",
 		"compile": "tsc",
-		"importmap": "importly < package.json > dist/importmap.json",
+		"importmap": "importly < package.json > x/importmap.json",
 		"watch": "tsc -w",
 		"start": "serve",
-		"test": "cynic node dist/tests.test.js"
+		"test": "cynic node x/tests.test.js"
 	},
 	"devDependencies": {
 		"cynic": "^0.1.0-dev.14",
