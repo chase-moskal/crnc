@@ -1,62 +1,62 @@
 
+import {Suite, expect} from "cynic"
+
 import {exchangeRates} from "./testing-tools.js"
 import {convertCurrency} from "./convert-currency.js"
 
-describe("convert currency - function", () => {
-	it("converts values", async() => {
+export default <Suite>{
+	"convert values": async() => {
 		expect(convertCurrency({
 			value: 100,
 			inputCurrency: "GBP",
 			outputCurrency: "USD",
-			exchangeRates
-		})).toBe(200)
+			exchangeRates,
+		})).equals(200)
 		expect(convertCurrency({
 			value: 200,
 			inputCurrency: "USD",
 			outputCurrency: "GBP",
 			exchangeRates
-		})).toBe(100)
+		})).equals(100)
 		expect(convertCurrency({
 			value: 60,
 			inputCurrency: "CAD",
 			outputCurrency: "USD",
-			exchangeRates
-		})).toBe(40)
-	})
-
-	it("survives same input/output currencies", async() => {
+			exchangeRates,
+		})).equals(40)
+	},
+	"survives same input/output currencies": async() => {
 		expect(convertCurrency({
 			value: 123,
 			inputCurrency: "CAD",
 			outputCurrency: "CAD",
-			exchangeRates
-		})).toBe(123)
-	})
-
-	it("throws on invalid currency", async() => {
+			exchangeRates,
+		})).equals(123)
+	},
+	"throws on invalid currency": async() => {
 		expect(() => convertCurrency({
 			value: 100,
 			inputCurrency: "xyz",
 			outputCurrency: "USD",
-			exchangeRates
-		})).toThrow()
+			exchangeRates,
+		})).throws()
 		expect(() => convertCurrency({
 			value: 100,
 			inputCurrency: null,
 			outputCurrency: "USD",
-			exchangeRates
-		})).toThrow()
+			exchangeRates,
+		})).throws()
 		expect(() => convertCurrency({
 			value: 100,
 			inputCurrency: "",
 			outputCurrency: "USD",
-			exchangeRates
-		})).toThrow()
+			exchangeRates,
+		})).throws()
 		expect(() => convertCurrency({
 			value: 100,
 			inputCurrency: "GBP",
 			outputCurrency: "xyz",
-			exchangeRates
-		})).toThrow()
-	})
-})
+			exchangeRates,
+		})).throws()
+	},
+}

@@ -1,6 +1,6 @@
 
 import {currencies as defaultCurrencies} from "../ecommerce/currencies.js"
-import {CurrencyFormatter, FormatCurrencyParams, Money, FormattableNumber} from "../interfaces.js"
+import {FormatCurrencyParams, Money, FormattableNumber} from "../interfaces.js"
 
 /**
  * Round a number to the desired number of decimal places

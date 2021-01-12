@@ -1,62 +1,63 @@
 
-import {exchangeRates} from "./testing-tools.js"
+import {Suite, expect} from "cynic"
 import {formatCurrency} from "./format-currency.js"
-import {convertAndFormatCurrency} from "./convert-and-format-currency.js"
 
-describe("format currency - function", () => {
-	const locale = "en-US"
+const locale = "en-US"
 
-	it("displays human-readable currency", async() => {
+export default <Suite>{
+	"displays human-readable currency": async() => {
 		expect(formatCurrency({
 			value: 1.23,
 			code: "CAD",
-			locale
-		}).price).toBe("$1.23 CAD")
-
+			locale,
+		}).price).equals("$1.23 CAD")
 		expect(formatCurrency({
 			value: 1234.56,
 			code: "CAD",
-			locale
-		}).price).toBe("$1,234.56 CAD")
-
+			locale,
+		}).price).equals("$1,234.56 CAD")
 		expect(formatCurrency({
 			value: 1.23,
 			code: "XBT",
 			precision: 8,
-			locale
-		}).price).toBe("Ƀ1.23000000 XBT")
-	})
-
-	it("rounds numbers", async() => {
+			locale,
+		}).price).equals("Ƀ1.23000000 XBT")
+	},
+	"rounds numbers": async() => {
 		expect(formatCurrency({
 			value: 1.234,
 			code: "CAD",
-			locale
-		}).price).toBe("$1.23 CAD")
+			locale,
+		}).price).equals("$1.23 CAD")
 		expect(formatCurrency({
 			value: 1.235,
 			code: "CAD",
-			locale
-		}).price).toBe("$1.24 CAD")
+			locale,
+		}).price).equals("$1.24 CAD")
 		expect(formatCurrency({
 			value: 1234567.89,
 			code: "CAD",
 			precision: 0,
-			locale
-		}).price).toBe("$1,234,568 CAD")
-	})
-
-	it("respects precision", async() => {
-		expect(convertAndFormatCurrency({
-			exchangeRates,
+			locale,
+		}).price).equals("$1,234,568 CAD")
+	},
+	"respects precision": async() => {
+		expect(formatCurrency({
 			value: 123,
+			code: "CAD",
 			precision: 0,
-			inputCurrency: "CAD",
-			outputCurrency: "CAD"
-		}).price).toBe("$123 CAD")
-	})
-
-	it("throws on unknown currency", async() => {
-		expect(() => formatCurrency({value: 123, code: "xyz", locale})).toThrow()
-	})
-})
+		}).price).equals("$123 CAD")
+		expect(formatCurrency({
+			value: 123,
+			code: "CAD",
+			precision: 1,
+		}).price).equals("$123.0 CAD")
+	},
+	"throws on unknown currency": async() => {
+		expect(() => formatCurrency({
+			value: 123,
+			code: "xyz",
+			locale,
+		})).throws()
+	},
+}

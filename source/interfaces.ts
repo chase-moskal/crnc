@@ -42,9 +42,6 @@ export interface Currencies {
 	[code: string]: Currency
 }
 
-export type CurrencyFormatter = (formattable: FormattableNumber) => Money
-export type CurrencyFormatters = { [key: string]: CurrencyFormatter }
-
 export interface FormatCurrencyParams extends FormattableNumber {
 	code: string
 	currencies?: Currencies
