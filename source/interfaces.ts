@@ -26,19 +26,28 @@ export interface FormattableNumber {
 }
 
 export interface Money {
-	code: string   // "USD"
+	currency: Currency
 	value: number  // 1234.56
 	amount: string // "1,234.56"
-	symbol: string // "$",
 	price: string  // "$1,234.56 USD"
+}
+
+export interface Currency {
+	code: string   // "USD"
+	name: string   // United States Dollar
+	symbol: string // "$"
+}
+
+export interface Currencies {
+	[code: string]: Currency
 }
 
 export type CurrencyFormatter = (formattable: FormattableNumber) => Money
 export type CurrencyFormatters = { [key: string]: CurrencyFormatter }
 
 export interface FormatCurrencyParams extends FormattableNumber {
-	currency: string
-	formatters?: CurrencyFormatters
+	code: string
+	currencies?: Currencies
 }
 
 export interface ConvertAndFormatCurrencyParams extends FormattableNumber {
@@ -47,14 +56,14 @@ export interface ConvertAndFormatCurrencyParams extends FormattableNumber {
 	exchangeRates: CurrencyExchangeRates
 }
 
-export interface LocalesToCurrencies {
+export interface CurrenciesByLocales {
 	[locale: string]: string
 }
 
 export interface AssumeUserCurrencyParams {
 	fallback: string
 	locale?: string
-	localesToCurrencies?: LocalesToCurrencies
+	currenciesByLocales?: CurrenciesByLocales
 }
 
 export interface AscertainEcommerceDetailsParams {
@@ -68,4 +77,3 @@ export interface EcommerceDetails {
 	userDisplayCurrency: string
 	exchangeRates: CurrencyExchangeRates
 }
-

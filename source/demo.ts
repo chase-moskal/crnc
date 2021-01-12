@@ -28,7 +28,7 @@ async function crncDemo() {
 	})
 
 	// log the results to the console
-	const start = formatCurrency({value, currency: inputCurrency})
+	const start = formatCurrency({value, code: inputCurrency})
 	console.log(`crnc demo: convert ${start} into ${result}`)
 
 	// ecommerce experiment

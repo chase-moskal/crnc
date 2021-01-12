@@ -9,19 +9,19 @@ describe("format currency - function", () => {
 	it("displays human-readable currency", async() => {
 		expect(formatCurrency({
 			value: 1.23,
-			currency: "CAD",
+			code: "CAD",
 			locale
 		}).price).toBe("$1.23 CAD")
 
 		expect(formatCurrency({
 			value: 1234.56,
-			currency: "CAD",
+			code: "CAD",
 			locale
 		}).price).toBe("$1,234.56 CAD")
 
 		expect(formatCurrency({
 			value: 1.23,
-			currency: "XBT",
+			code: "XBT",
 			precision: 8,
 			locale
 		}).price).toBe("Ƀ1.23000000 XBT")
@@ -30,17 +30,17 @@ describe("format currency - function", () => {
 	it("rounds numbers", async() => {
 		expect(formatCurrency({
 			value: 1.234,
-			currency: "CAD",
+			code: "CAD",
 			locale
 		}).price).toBe("$1.23 CAD")
 		expect(formatCurrency({
 			value: 1.235,
-			currency: "CAD",
+			code: "CAD",
 			locale
 		}).price).toBe("$1.24 CAD")
 		expect(formatCurrency({
 			value: 1234567.89,
-			currency: "CAD",
+			code: "CAD",
 			precision: 0,
 			locale
 		}).price).toBe("$1,234,568 CAD")
@@ -57,6 +57,6 @@ describe("format currency - function", () => {
 	})
 
 	it("throws on unknown currency", async() => {
-		expect(() => formatCurrency({value: 123, currency: "xyz", locale})).toThrow()
+		expect(() => formatCurrency({value: 123, code: "xyz", locale})).toThrow()
 	})
 })

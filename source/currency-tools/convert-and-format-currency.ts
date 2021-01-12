@@ -20,7 +20,7 @@ export function convertAndFormatCurrency({
 	return formatCurrency({
 		locale,
 		precision,
-		currency: outputCurrency,
+		code: outputCurrency,
 		value: convertCurrency({value, inputCurrency, outputCurrency, exchangeRates})
 	})
 }
