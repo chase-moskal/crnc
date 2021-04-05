@@ -18,13 +18,13 @@
 		"test": "cynic node x/tests.test.js"
 	},
 	"devDependencies": {
-		"cynic": "^0.1.0-dev.14",
+		"cynic": "0.1.0-dev.16",
 		"importly": "0.1.0-dev.0",
 		"mkdirp": "^1.0.4",
 		"npm-run-all": "^4.1.5",
 		"rimraf": "^3.0.2",
 		"serve": "^11.3.2",
-		"typescript": "^4.1.3"
+		"typescript": "^4.2.3"
 	},
 	"dependencies": {
 		"commotion": "0.1.0-dev.0"
