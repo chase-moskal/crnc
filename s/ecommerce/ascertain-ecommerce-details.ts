@@ -27,10 +27,16 @@ export async function ascertainEcommerceDetails({
 
 	try {
 		const {exchangeRates} = await downloadCache.read()
+		const userDisplayCurrencyIsValid =
+			Object.keys(exchangeRates).indexOf(userDisplayCurrency) !== -1
+		if (!userDisplayCurrencyIsValid)
+			console.warn(`userDisplayCurrency ${userDisplayCurrency} is not available. going with ${storeBaseCurrency} instead`)
 		return {
 			exchangeRates,
 			storeBaseCurrency,
-			userDisplayCurrency
+			userDisplayCurrency: userDisplayCurrencyIsValid
+			? userDisplayCurrency
+			: storeBaseCurrency,
 		}
 	}
 	catch (error) {
