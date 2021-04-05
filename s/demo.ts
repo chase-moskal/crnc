@@ -28,7 +28,7 @@ async function crncDemo() {
 		exchangeRates,
 		value,
 		inputCurrency,
-		outputCurrency
+		outputCurrency,
 	})
 
 	// log the results to the console
