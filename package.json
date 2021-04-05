@@ -13,6 +13,7 @@
 		"prepare": "run-s clean && run-p compile importmap && run-s test",
 		"clean": "rimraf x && mkdirp x",
 		"compile": "tsc",
+		"watch": "tsc -w",
 		"importmap": "importly --host=unpkg < package.json > x/importmap.json",
 		"start": "serve",
 		"test": "cynic node x/tests.test.js"

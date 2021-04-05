@@ -4,8 +4,9 @@
 `npm install crnc`
 
 - this is the currency library for [shopper](https://github.com/chase-moskal/shopper)
-- preconfigured to work with [exchangeratesapi.io](https://exchangeratesapi.io/) out of the box
-- lackluster documentation, so you're going to need to read the source to learn any details.. so sorry
+- downloads exchange rates from the [bank of canada's public api](https://www.bankofcanada.ca/valet/docs)
+- caches results in localStorage for an hour by default
+- no real documentation, read the source (so sorry)
 - open source, contributions welcome
 
 ### crnc is a collection of handy functions
@@ -13,7 +14,7 @@
 currency tools
 
 - [downloadExchangeRates](./s/currency-tools/download-exchange-rates.ts)  
-	download up-to-date currency exchange info from the internet
+	download somewhat up-to-date currency exchange info from the internet
 
 - [convertCurrency](./s/currency-tools/convert-currency.ts)  
 	exchange a money value from one currency to another
@@ -29,7 +30,7 @@ currency tools
 ecommerce helpers
 
 - [ascertainEcommerceDetails](./s/ecommerce/ascertain-ecommerce-details.ts)  
-	some logic to retrieve exchange rates, or fall back onto a dud (where no conversions occur)
+	enhanced logic to retrieve exchange rates, fallback onto dud, caching
 
 - [assumeUserCurrency](./s/ecommerce/assume-user-currency.ts)  
-	assume what currency the user might want to see
+	assume what currency the user might want to see based on locale

@@ -1,7 +1,7 @@
 
 import {Currency} from "../interfaces.js"
 
-export const currencies: {[code: string]: Currency} = {
+export const currencies: {[key: string]: Currency} = {
 	USD: {
 		code: "USD",
 		symbol: "$",
@@ -11,6 +11,11 @@ export const currencies: {[code: string]: Currency} = {
 		code: "CAD",
 		symbol: "$",
 		name: "Canadian Dollar",
+	},
+	AUD: {
+		code: "AUD",
+		symbol: "$",
+		name: "Australian Dollar",
 	},
 	EUR: {
 		code: "EUR",

@@ -1,10 +1,14 @@
 
+import {bankOfCanadaSupportedCurrencies} from "./currency-tools/bank-of-canada/supported-currencies.js"
+
+export type BankOfCanadaSupportedCurrencies =
+	typeof bankOfCanadaSupportedCurrencies[number]
+
 export interface DownloadExchangeRatesParams {
-	ratesUrl?: string
+	currencies?: BankOfCanadaSupportedCurrencies[]
 }
 
 export interface DownloadExchangeRatesResults {
-	lastUpdatedDate: string
 	exchangeRates: CurrencyExchangeRates
 }
 
@@ -25,17 +29,17 @@ export interface FormattableNumber {
 	locale?: string
 }
 
+export interface Currency {
+	code: string   // "USD"
+	name: string   // United States Dollar
+	symbol: string // "$"
+}
+
 export interface Money {
 	currency: Currency
 	value: number  // 1234.56
 	amount: string // "1,234.56"
 	price: string  // "$1,234.56 USD"
-}
-
-export interface Currency {
-	code: string   // "USD"
-	name: string   // United States Dollar
-	symbol: string // "$"
 }
 
 export interface Currencies {
@@ -63,10 +67,12 @@ export interface AssumeUserCurrencyParams {
 	currenciesByLocales?: CurrenciesByLocales
 }
 
-export interface AscertainEcommerceDetailsParams {
+export interface AscertainEcommerceDetailsParams extends DownloadExchangeRatesParams {
 	storeBaseCurrency: string
 	userDisplayCurrency: string
-	ratesUrl?: string
+	cacheLifespan?: number
+	cacheStorageKey?: string
+	cacheStorage?: typeof window.localStorage
 }
 
 export interface EcommerceDetails {

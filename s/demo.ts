@@ -11,13 +11,17 @@ import {convertAndFormatCurrency} from "./currency-tools/convert-and-format-curr
 
 async function crncDemo() {
 
-	// download the exchange rates
-	const {exchangeRates} = await downloadExchangeRates()
-
 	// define some arbitrary demo values
 	const value = 123.45
 	const inputCurrency = "CAD"
 	const outputCurrency = "USD"
+
+	// ecommerce experiment
+	const {exchangeRates} = await ascertainEcommerceDetails({
+		storeBaseCurrency: inputCurrency,
+		userDisplayCurrency: assumeUserCurrency({fallback: inputCurrency})
+	})
+	console.log(`crnc exchangeRates`, exchangeRates)
 
 	// perform a currency conversion
 	const result = convertAndFormatCurrency({
@@ -30,13 +34,6 @@ async function crncDemo() {
 	// log the results to the console
 	const start = formatCurrency({value, code: inputCurrency})
 	console.log(`crnc demo: convert ${start.price} into ${result.price}`)
-
-	// ecommerce experiment
-	const details = await ascertainEcommerceDetails({
-		storeBaseCurrency: inputCurrency,
-		userDisplayCurrency: assumeUserCurrency({fallback: inputCurrency})
-	})
-	console.log(`crnc ecommerce details:`, details)
 }
 
 crncDemo()

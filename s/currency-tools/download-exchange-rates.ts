@@ -1,26 +1,38 @@
 
-import {requestJson} from "commotion/dist/request-json.js"
-
-import {
-	DownloadExchangeRatesParams,
-	DownloadExchangeRatesResults
-} from "../interfaces"
+import {requestXml} from "../toolbox/request-xml.js"
+import {defaultCurrenciesToDownload} from "./defaults/default-currencies-to-download.js"
+import {CurrencyExchangeRates, DownloadExchangeRatesParams, DownloadExchangeRatesResults} from "../interfaces.js"
 
 /**
  * Download exchange rates
- *  + download up-to-date currency exchange information from the internet
- *  + powered by <https://exchangeratesapi.io/> — check it out
- *  + returns a promised results object
- *   - 'updated', the date-string of the information
- *   - 'rates', dictionary of exchange rate values
+ * - from bank of canada valet service https://www.bankofcanada.ca/valet/docs
  */
 export async function downloadExchangeRates({
-	ratesUrl = "https://api.exchangeratesapi.io/latest"
-}: DownloadExchangeRatesParams = {}): Promise<DownloadExchangeRatesResults> {
+		currencies = [...defaultCurrenciesToDownload],
+	}: DownloadExchangeRatesParams = {}): Promise<DownloadExchangeRatesResults> {
 
-	const {base, date, rates} = await requestJson({url: ratesUrl})
-	return {
-		lastUpdatedDate: date,
-		exchangeRates: {...rates, [base]: 1.0}
-	}
+	const canadian = "CAD"
+	const nonCanadianOnly = (currency: string) => currency !== canadian
+	const toBankOfCanadaSeries = (currency: string) => `FX${currency}${canadian}`
+	const series = currencies
+		.filter(nonCanadianOnly)
+		.map(toBankOfCanadaSeries)
+		.join(",")
+
+	const url = `https://www.bankofcanada.ca/valet/fx_rss/${series}`
+	const xml = await requestXml(url)
+
+	const exchangeRateElements = Array.from(xml.querySelectorAll("exchangeRate"))
+	const rawRates = exchangeRateElements.map(element => {
+		const value = parseFloat(element.querySelector("value").textContent)
+		const currency = element.querySelector("targetCurrency").textContent
+		return {currency, value}
+	})
+
+	const exchangeRates: CurrencyExchangeRates = {}
+	exchangeRates["CAD"] = 1.0
+	for (const rate of rawRates)
+		exchangeRates[rate.currency] = 1 / rate.value
+
+	return {exchangeRates}
 }
