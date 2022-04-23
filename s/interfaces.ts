@@ -105,11 +105,6 @@ export type Await<P> = P extends Promise<infer V>
 
 export type CurrencyConverter = Await<ReturnType<typeof makeCurrencyConverter>>
 
-// export interface CurrencyConverter {
-// 	display(value: number): Money
-// 	setDisplayCurrency(code: string): void
-// }
-
 export interface ConverterPersistence {
 	cacheLifespan: number
 	storage: BasicStorage

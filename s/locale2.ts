@@ -32,7 +32,7 @@ SOFTWARE.
 
 */
 
-const global: any = window
+const global: any = (function() { return this })()
 const process: any = undefined
 
 function formatLocale(locale: any) {

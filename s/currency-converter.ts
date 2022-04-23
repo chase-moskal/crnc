@@ -11,23 +11,26 @@ import {rememberOrDownloadExchangeRates} from "./ecommerce/remember-or-download-
 import {downloadExchangeRates as defaultDownloadExchangeRates} from "./currency-tools/download-exchange-rates.js"
 import {ConverterPersistence, Currencies, CurrencyExchangeRates, DownloadExchangeRates} from "./interfaces.js"
 
-const oneHour = 1000 * 60 * 60
+export const oneHour = 1000 * 60 * 60
 
 export async function makeCurrencyConverter({
-		precision,
-		persistence,
 		baseCurrency,
 		locale = locale2(),
 		currencies = defaultCurrencies,
-		exchangeRatesCacheLifespan = oneHour,
+		persistence = {
+			storage: window.localStorage,
+			cacheLifespan: oneHour,
+			storageKeys: {
+				exchangeRatesCache: "crnc-exchange-rates-cache",
+				userDisplayCurrency: "crnc-user-display-currency",
+			},
+		},
 		downloadExchangeRates = defaultDownloadExchangeRates,
 	}: {
-		precision: number
 		baseCurrency: string
-		persistence: ConverterPersistence
 		locale?: string
 		currencies?: Currencies
-		exchangeRatesCacheLifespan?: number
+		persistence?: ConverterPersistence
 		downloadExchangeRates?: DownloadExchangeRates
 	}) {
 
@@ -51,7 +54,7 @@ export async function makeCurrencyConverter({
 	snap.state.exchangeRates = await rememberOrDownloadExchangeRates({
 		currencies,
 		persistence,
-		cacheLifespan: exchangeRatesCacheLifespan,
+		cacheLifespan: persistence.cacheLifespan,
 		downloadExchangeRates,
 	})
 
@@ -59,7 +62,7 @@ export async function makeCurrencyConverter({
 
 		snap: restricted(snap),
 
-		display(valueInBaseCurrency: number) {
+		display(valueInBaseCurrency: number, precision = 2) {
 			const {exchangeRates, baseCurrency, userDisplayCurrency} = snap.state
 			const currencyShouldBeConverted = baseCurrency !== userDisplayCurrency
 			return (currencyShouldBeConverted && exchangeRates)
