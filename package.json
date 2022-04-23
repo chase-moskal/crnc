@@ -32,5 +32,8 @@
 		"currency-conversion",
 		"currency-converter",
 		"exchange-rates"
-	]
+	],
+	"dependencies": {
+		"@chasemoskal/snapstate": "^0.0.8"
+	}
 }

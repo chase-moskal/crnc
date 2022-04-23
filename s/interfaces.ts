@@ -1,16 +1,22 @@
 
+import {makeCurrencyConverter} from "./currency-converter.js"
 import {bankOfCanadaSupportedCurrencies} from "./currency-tools/bank-of-canada/supported-currencies.js"
 
 export type BankOfCanadaSupportedCurrencies =
 	typeof bankOfCanadaSupportedCurrencies[number]
 
+export type CurrencyCodes = BankOfCanadaSupportedCurrencies[]
+
 export interface DownloadExchangeRatesParams {
-	currencies?: BankOfCanadaSupportedCurrencies[]
+	currencyCodes?: CurrencyCodes
 }
 
 export interface DownloadExchangeRatesResults {
 	exchangeRates: CurrencyExchangeRates
 }
+
+export type DownloadExchangeRates = ({}: DownloadExchangeRatesParams) =>
+	Promise<DownloadExchangeRatesResults>
 
 export interface CurrencyExchangeRates {
 	[key: string]: number
@@ -72,11 +78,43 @@ export interface AscertainEcommerceDetailsParams extends DownloadExchangeRatesPa
 	userDisplayCurrency: string
 	cacheLifespan?: number
 	cacheStorageKey?: string
-	cacheStorage?: typeof window.localStorage
+	cacheStorage?: BasicStorage
 }
 
 export interface EcommerceDetails {
 	storeBaseCurrency: string
 	userDisplayCurrency: string
 	exchangeRates: CurrencyExchangeRates
+}
+
+export interface BasicStorage {
+	getItem(key: string): string
+	setItem(key: string, value: string): void
+	removeItem(key: string): void
+}
+
+export interface JsonStorage {
+	getItem<T>(key: string): T
+	setItem<T>(key: string, value: T): string
+	removeItem(key: string): void
+}
+
+export type Await<P> = P extends Promise<infer V>
+	? V
+	: never
+
+export type CurrencyConverter = Await<ReturnType<typeof makeCurrencyConverter>>
+
+// export interface CurrencyConverter {
+// 	display(value: number): Money
+// 	setDisplayCurrency(code: string): void
+// }
+
+export interface ConverterPersistence {
+	cacheLifespan: number
+	storage: BasicStorage
+	storageKeys: {
+		userDisplayCurrency: string
+		exchangeRatesCache: string
+	}
 }

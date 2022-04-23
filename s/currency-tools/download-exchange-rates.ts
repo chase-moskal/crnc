@@ -8,13 +8,13 @@ import {CurrencyExchangeRates, DownloadExchangeRatesParams, DownloadExchangeRate
  * - from bank of canada valet service https://www.bankofcanada.ca/valet/docs
  */
 export async function downloadExchangeRates({
-		currencies = [...defaultCurrenciesToDownload],
+		currencyCodes = [...defaultCurrenciesToDownload],
 	}: DownloadExchangeRatesParams = {}): Promise<DownloadExchangeRatesResults> {
 
 	const canadian = "CAD"
 	const nonCanadianOnly = (currency: string) => currency !== canadian
 	const toBankOfCanadaSeries = (currency: string) => `FX${currency}${canadian}`
-	const series = currencies
+	const series = currencyCodes
 		.filter(nonCanadianOnly)
 		.map(toBankOfCanadaSeries)
 		.join(",")

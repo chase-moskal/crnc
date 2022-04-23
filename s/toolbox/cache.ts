@@ -1,9 +1,11 @@
 
+import {BasicStorage} from "../interfaces.js"
+
 export function cache<xPayload extends any>({
 		lifespan, storage, storageKey, load,
 	}: {
 		lifespan: number
-		storage: Storage
+		storage: BasicStorage
 		storageKey: string
 		load: () => Promise<xPayload>
 	}) {
