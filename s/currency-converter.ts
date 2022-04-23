@@ -2,13 +2,14 @@
 import {restricted, snapstate} from "@chasemoskal/snapstate"
 
 import {locale2} from "./locale2.js"
-import {cache} from "./toolbox/cache.js"
 import {formatCurrency} from "./currency-tools/format-currency.js"
-import {assumeUserCurrency} from "./ecommerce/assume-user-currency.js"
+import {isCurrencyAvailable} from "./ecommerce/is-currency-available.js"
 import {currencies as defaultCurrencies} from "./ecommerce/currencies.js"
 import {convertAndFormatCurrency} from "./currency-tools/convert-and-format-currency.js"
+import {rememberUserDisplayCurrency} from "./ecommerce/remember-user-display-currency.js"
+import {rememberOrDownloadExchangeRates} from "./ecommerce/remember-or-download-exchange-rates.js"
 import {downloadExchangeRates as defaultDownloadExchangeRates} from "./currency-tools/download-exchange-rates.js"
-import {ConverterPersistence, Currencies, CurrencyCodes, CurrencyExchangeRates, DownloadExchangeRates} from "./interfaces.js"
+import {ConverterPersistence, Currencies, CurrencyExchangeRates, DownloadExchangeRates} from "./interfaces.js"
 
 const oneHour = 1000 * 60 * 60
 
@@ -18,6 +19,7 @@ export async function makeCurrencyConverter({
 		baseCurrency,
 		locale = locale2(),
 		currencies = defaultCurrencies,
+		exchangeRatesCacheLifespan = oneHour,
 		downloadExchangeRates = defaultDownloadExchangeRates,
 	}: {
 		precision: number
@@ -25,6 +27,7 @@ export async function makeCurrencyConverter({
 		persistence: ConverterPersistence
 		locale?: string
 		currencies?: Currencies
+		exchangeRatesCacheLifespan?: number
 		downloadExchangeRates?: DownloadExchangeRates
 	}) {
 
@@ -45,15 +48,17 @@ export async function makeCurrencyConverter({
 		fallback: baseCurrency,
 	})
 
-	snap.state.exchangeRates = await fetchCachedExchangeRatesOrDownloadThem({
+	snap.state.exchangeRates = await rememberOrDownloadExchangeRates({
 		currencies,
 		persistence,
-		cacheLifespan: oneHour,
+		cacheLifespan: exchangeRatesCacheLifespan,
 		downloadExchangeRates,
 	})
 
 	return {
+
 		snap: restricted(snap),
+
 		display(valueInBaseCurrency: number) {
 			const {exchangeRates, baseCurrency, userDisplayCurrency} = snap.state
 			const currencyShouldBeConverted = baseCurrency !== userDisplayCurrency
@@ -74,55 +79,11 @@ export async function makeCurrencyConverter({
 					value: valueInBaseCurrency,
 				})
 		},
+
 		setDisplayCurrency(code: string) {
-			if (!isCurrencyAvailable(code, currencies))
-				throw new Error(`currency ${code} is not available`)
-			snap.state.userDisplayCurrency = code
+			snap.state.userDisplayCurrency = isCurrencyAvailable(code, currencies)
+				? code
+				: baseCurrency
 		},
 	}
-}
-
-async function fetchCachedExchangeRatesOrDownloadThem({
-			currencies,
-			cacheLifespan,
-			persistence: {storage, storageKeys},
-			downloadExchangeRates,
-		}: {
-		cacheLifespan?: number
-		currencies: Currencies
-		persistence: ConverterPersistence
-		downloadExchangeRates: DownloadExchangeRates
-	}) {
-	const currencyCodes = <CurrencyCodes>Object.keys(currencies)
-	const ratesCache = cache({
-		lifespan: cacheLifespan,
-		storage,
-		storageKey: storageKeys.exchangeRatesCache,
-		load: async() => downloadExchangeRates({currencyCodes}),
-	})
-	const {exchangeRates} = await ratesCache.read()
-	return exchangeRates
-}
-
-function rememberUserDisplayCurrency({
-		locale,
-		fallback,
-		currencies,
-		persistence: {storage, storageKeys},
-	}: {
-		locale: string
-		fallback: string
-		currencies: Currencies
-		persistence: ConverterPersistence
-	}) {
-	const remembered = storage.getItem(storageKeys.userDisplayCurrency)
-	return remembered
-		? isCurrencyAvailable(remembered, currencies)
-			? remembered
-			: assumeUserCurrency({locale, fallback})
-		: assumeUserCurrency({locale, fallback})
-}
-
-function isCurrencyAvailable(code: string, currencies: Currencies) {
-	return Object.keys(currencies).indexOf(code) !== -1
 }
