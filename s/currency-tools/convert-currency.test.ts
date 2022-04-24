@@ -16,7 +16,7 @@ export default <Suite>{
 			value: 200,
 			inputCurrency: "USD",
 			outputCurrency: "GBP",
-			exchangeRates
+			exchangeRates,
 		})).equals(100)
 		expect(convertCurrency({
 			value: 60,

@@ -84,9 +84,16 @@ export async function makeCurrencyConverter({
 		},
 
 		setDisplayCurrency(code: string) {
-			snap.state.userDisplayCurrency = isCurrencyAvailable(code, currencies)
+			const display = isCurrencyAvailable(code, currencies)
 				? code
 				: baseCurrency
+
+			persistence.storage.setItem(
+				persistence.storageKeys.userDisplayCurrency,
+				display,
+			)
+
+			snap.state.userDisplayCurrency = display
 		},
 	}
 }
