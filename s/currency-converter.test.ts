@@ -151,8 +151,37 @@ export default <Suite>{
 			})
 			expect(converter.display(1).value).equals(1)
 		},
-		async "setting an unknown userDisplayCurrency, falls back on baseCurrency"() {},
-		async "remembering an unknown useDisplayCurrency, falls back on baseCurrency"() {},
+		async "setting an unknown userDisplayCurrency, falls back on baseCurrency"() {
+			const converter = await makeCurrencyConverter({
+				locale: "en-us",
+				baseCurrency: "USD",
+				currencies: defaultCurrencies,
+				persistence: mockPersistence.standard(),
+				downloadExchangeRates: mockExchangeRateDownloaders.successful(),
+			})
+			const {state} = converter.snap
+			converter.setDisplayCurrency("LOL")
+			expect(state.userDisplayCurrency).equals("USD")
+			const value = 1
+			const result = converter.display(value)
+			expect(result.value).equals(value)
+		},
+		async "remembering an unknown userDisplayCurrency, falls back on baseCurrency"() {
+			const persistence = mockPersistence.standard()
+			persistence.storage.setItem(persistence.storageKeys.userDisplayCurrency, "LOL")
+			const converter = await makeCurrencyConverter({
+				locale: "en-us",
+				baseCurrency: "USD",
+				currencies: defaultCurrencies,
+				persistence: mockPersistence.standard(),
+				downloadExchangeRates: mockExchangeRateDownloaders.successful(),
+			})
+			const {state} = converter.snap
+			expect(state.userDisplayCurrency).equals("USD")
+			const value = 1
+			const result = converter.display(value)
+			expect(result.value).equals(value)
+		},
 
 	},
 	"fail hard": {
