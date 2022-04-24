@@ -42,26 +42,63 @@ export default <Suite>{
 
 		async "user display currency is remembered"() {
 			const persistence = mockPersistence.standard()
-			const converter1 = await makeCurrencyConverter({
-				persistence,
-				locale: "en-us",
-				baseCurrency: "USD",
-				currencies: defaultCurrencies,
-				downloadExchangeRates: mockExchangeRateDownloaders.successful(),
-			})
-			expect(converter1.snap.readable.userDisplayCurrency).equals("USD")
-			converter1.setDisplayCurrency("CAD")
-			expect(converter1.snap.readable.userDisplayCurrency).equals("CAD")
-			const converter2 = await makeCurrencyConverter({
-				persistence,
-				locale: "en-us",
-				baseCurrency: "USD",
-				currencies: defaultCurrencies,
-				downloadExchangeRates: mockExchangeRateDownloaders.successful(),
-			})
-			expect(converter2.snap.readable.userDisplayCurrency).equals("CAD")
+			{
+				const converter1 = await makeCurrencyConverter({
+					persistence,
+					locale: "en-us",
+					baseCurrency: "USD",
+					currencies: defaultCurrencies,
+					downloadExchangeRates: mockExchangeRateDownloaders.successful(),
+				})
+				expect(converter1.snap.readable.userDisplayCurrency).equals("USD")
+				converter1.setDisplayCurrency("CAD")
+				expect(converter1.snap.readable.userDisplayCurrency).equals("CAD")
+			}
+			{
+				const converter2 = await makeCurrencyConverter({
+					persistence,
+					locale: "en-us",
+					baseCurrency: "USD",
+					currencies: defaultCurrencies,
+					downloadExchangeRates: mockExchangeRateDownloaders.successful(),
+				})
+				expect(converter2.snap.readable.userDisplayCurrency).equals("CAD")
+			}
 		},
-		async "exchange rates are cached"() {},
+		async "exchange rates are cached"() {
+			const persistence = mockPersistence.standard()
+			const downloadCounter = mockExchangeRateDownloaders.downloadCounter()
+			{
+				const converter1 = await makeCurrencyConverter({
+					persistence,
+					locale: "en-us",
+					baseCurrency: "USD",
+					currencies: defaultCurrencies,
+					downloadExchangeRates: downloadCounter.download,
+				})
+				converter1.setDisplayCurrency("CAD")
+				const value = 1
+				const result = converter1.display(value)
+				expect(result.value).not.equals(value)
+				expect(result.value).equals(1.5)
+			}
+			expect(downloadCounter.count).equals(1)
+			{
+				const converter2 = await makeCurrencyConverter({
+					persistence,
+					locale: "en-us",
+					baseCurrency: "USD",
+					currencies: defaultCurrencies,
+					downloadExchangeRates: downloadCounter.download,
+				})
+				converter2.setDisplayCurrency("CAD")
+				const value = 1
+				const result = converter2.display(value)
+				expect(result.value).not.equals(value)
+				expect(result.value).equals(1.5)
+			}
+			expect(downloadCounter.count).equals(1)
+		},
 		async "cached exchange rates expire after an hour"() {},
 
 	},

@@ -1,20 +1,34 @@
 
-import {DownloadExchangeRatesParams, DownloadExchangeRatesResults, CurrencyExchangeRates} from "../interfaces.js"
+import {CurrencyExchangeRates, DownloadExchangeRates} from "../interfaces.js"
 import {exchangeRates as exampleExchangeRates} from "../currency-tools/testing-tools.js"
+
+const successful = (): DownloadExchangeRates => async({currencyCodes}) => {
+	const exchangeRates: CurrencyExchangeRates = {}
+	for (const code of currencyCodes)
+		exchangeRates[code] = 1.0
+	return {
+		exchangeRates: {
+			...exchangeRates,
+			...exampleExchangeRates,
+		},
+	}
+}
 
 export const mockExchangeRateDownloaders = {
 
-	successful: () => async({
-			currencyCodes,
-		}: DownloadExchangeRatesParams): Promise<DownloadExchangeRatesResults> => {
-		const exchangeRates: CurrencyExchangeRates = {}
-		for (const code of currencyCodes)
-			exchangeRates[code] = 1.0
+	successful,
+
+	downloadCounter: () => {
+		let downloadCount = 0
+		const downloader = successful()
 		return {
-			exchangeRates: {
-				...exchangeRates,
-				...exampleExchangeRates,
+			get count() {
+				return downloadCount
 			},
+			download: <DownloadExchangeRates>(async(...params) => {
+				downloadCount += 1
+				return downloader(...params)
+			}),
 		}
 	},
 }
