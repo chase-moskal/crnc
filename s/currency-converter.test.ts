@@ -201,6 +201,17 @@ export default <Suite>{
 				})
 			).throws()
 		},
+		async "unsupported currency throws an error"() {
+			await expect(async() =>
+				await makeCurrencyConverter({
+					locale,
+					currencies: <any>[...currencies, "LOL"],
+					baseCurrency: "USD",
+					persistence: mockPersistence.standard(),
+					downloadExchangeRates: mockExchangeRateDownloaders.successful(),
+				})
+			).throws()
+		},
 
 	},
 }
