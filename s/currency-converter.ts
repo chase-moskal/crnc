@@ -2,21 +2,22 @@
 import {restricted, snapstate} from "@chasemoskal/snapstate"
 
 import {locale2} from "./locale2.js"
+import {currencyLibrary} from "./ecommerce/currency-library.js"
 import {formatCurrency} from "./currency-tools/format-currency.js"
-import {isCurrencyAvailable} from "./ecommerce/is-currency-available.js"
-import {currencies as defaultCurrencies} from "./ecommerce/currencies.js"
+import {isCurrencyAllowed} from "./ecommerce/is-currency-allowed.js"
 import {convertAndFormatCurrency} from "./currency-tools/convert-and-format-currency.js"
 import {rememberUserDisplayCurrency} from "./ecommerce/remember-user-display-currency.js"
+import {validateCurrencyConverterParams} from "./ecommerce/validate-currency-converter-params.js"
 import {rememberOrDownloadExchangeRates} from "./ecommerce/remember-or-download-exchange-rates.js"
 import {downloadExchangeRates as defaultDownloadExchangeRates} from "./currency-tools/download-exchange-rates.js"
-import {ConverterPersistence, Currencies, CurrencyExchangeRates, DownloadExchangeRates} from "./interfaces.js"
+import {ConverterPersistence, CurrencyExchangeRates, DownloadExchangeRates, SupportedCurrencies, SupportedCurrency} from "./interfaces.js"
 
 export const oneHour = 1000 * 60 * 60
 
 export async function makeCurrencyConverter({
+		currencies,
 		baseCurrency,
 		locale = locale2(),
-		currencies = defaultCurrencies,
 		persistence = {
 			storage: window.localStorage,
 			cacheLifespan: oneHour,
@@ -27,21 +28,20 @@ export async function makeCurrencyConverter({
 		},
 		downloadExchangeRates = defaultDownloadExchangeRates,
 	}: {
-		baseCurrency: string
+		currencies: SupportedCurrencies
+		baseCurrency: SupportedCurrency
 		locale?: string
-		currencies?: Currencies
 		persistence?: ConverterPersistence
 		downloadExchangeRates?: DownloadExchangeRates
 	}) {
 
-	if (!isCurrencyAvailable(baseCurrency, currencies))
-		throw new Error(`baseCurrency ${baseCurrency} is not an available currency`)
+	validateCurrencyConverterParams({baseCurrency, currencies, currencyLibrary})
 
 	const snap = snapstate({
 		exchangeRates: undefined as CurrencyExchangeRates,
 		currencies,
 		baseCurrency,
-		userDisplayCurrency: baseCurrency,
+		userDisplayCurrency: baseCurrency as string,
 	})
 
 	snap.state.userDisplayCurrency = rememberUserDisplayCurrency({
@@ -54,7 +54,6 @@ export async function makeCurrencyConverter({
 	snap.state.exchangeRates = await rememberOrDownloadExchangeRates({
 		currencies,
 		persistence,
-		cacheLifespan: persistence.cacheLifespan,
 		downloadExchangeRates,
 	})
 
@@ -77,14 +76,14 @@ export async function makeCurrencyConverter({
 				: formatCurrency({
 					locale,
 					precision,
-					currencies,
+					currencyLibrary,
 					code: baseCurrency,
 					value: valueInBaseCurrency,
 				})
 		},
 
 		setDisplayCurrency(code: string) {
-			const display = isCurrencyAvailable(code, currencies)
+			const display = isCurrencyAllowed(code, currencies)
 				? code
 				: baseCurrency
 

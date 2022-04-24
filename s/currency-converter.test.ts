@@ -2,10 +2,14 @@
 import {Suite, expect} from "cynic"
 
 import {nap} from "./toolbox/nap.js"
+import {SupportedCurrencies} from "./interfaces.js"
 import {mockPersistence} from "./mocks/mock-persistence.js"
 import {makeCurrencyConverter} from "./currency-converter.js"
-import {currencies as defaultCurrencies} from "./ecommerce/currencies.js"
+import {exchangeRates} from "./currency-tools/testing-tools.js"
 import {mockExchangeRateDownloaders} from "./mocks/mock-download-exchange-rates.js"
+
+const locale = "en-us"
+const currencies = <SupportedCurrencies>Object.keys(exchangeRates)
 
 export default <Suite>{
 
@@ -13,9 +17,9 @@ export default <Suite>{
 
 		async "fresh startup can display in base currency"() {
 			const converter = await makeCurrencyConverter({
-				locale: "en-us",
+				locale,
+				currencies,
 				baseCurrency: "USD",
-				currencies: defaultCurrencies,
 				persistence: mockPersistence.standard(),
 				downloadExchangeRates: mockExchangeRateDownloaders.successful(),
 			})
@@ -26,9 +30,9 @@ export default <Suite>{
 
 		async "fresh startup can convert USD to CAD"() {
 			const converter = await makeCurrencyConverter({
-				locale: "en-us",
+				locale,
+				currencies,
 				baseCurrency: "USD",
-				currencies: defaultCurrencies,
 				persistence: mockPersistence.standard(),
 				downloadExchangeRates: mockExchangeRateDownloaders.successful(),
 			})
@@ -46,10 +50,10 @@ export default <Suite>{
 			const persistence = mockPersistence.standard()
 			{
 				const converter1 = await makeCurrencyConverter({
+					locale,
+					currencies,
 					persistence,
-					locale: "en-us",
 					baseCurrency: "USD",
-					currencies: defaultCurrencies,
 					downloadExchangeRates: mockExchangeRateDownloaders.successful(),
 				})
 				expect(converter1.snap.readable.userDisplayCurrency).equals("USD")
@@ -58,10 +62,10 @@ export default <Suite>{
 			}
 			{
 				const converter2 = await makeCurrencyConverter({
+					locale,
+					currencies,
 					persistence,
-					locale: "en-us",
 					baseCurrency: "USD",
-					currencies: defaultCurrencies,
 					downloadExchangeRates: mockExchangeRateDownloaders.successful(),
 				})
 				expect(converter2.snap.readable.userDisplayCurrency).equals("CAD")
@@ -72,10 +76,10 @@ export default <Suite>{
 			const downloadCounter = mockExchangeRateDownloaders.downloadCounter()
 			{
 				const converter1 = await makeCurrencyConverter({
+					locale,
+					currencies,
 					persistence,
-					locale: "en-us",
 					baseCurrency: "USD",
-					currencies: defaultCurrencies,
 					downloadExchangeRates: downloadCounter.download,
 				})
 				converter1.setDisplayCurrency("CAD")
@@ -87,10 +91,10 @@ export default <Suite>{
 			expect(downloadCounter.count).equals(1)
 			{
 				const converter2 = await makeCurrencyConverter({
+					locale,
+					currencies,
 					persistence,
-					locale: "en-us",
 					baseCurrency: "USD",
-					currencies: defaultCurrencies,
 					downloadExchangeRates: downloadCounter.download,
 				})
 				converter2.setDisplayCurrency("CAD")
@@ -107,10 +111,10 @@ export default <Suite>{
 			const downloadCounter = mockExchangeRateDownloaders.downloadCounter()
 			{
 				const converter1 = await makeCurrencyConverter({
+					locale,
+					currencies,
 					persistence,
-					locale: "en-us",
 					baseCurrency: "USD",
-					currencies: defaultCurrencies,
 					downloadExchangeRates: downloadCounter.download,
 				})
 				converter1.setDisplayCurrency("CAD")
@@ -123,10 +127,10 @@ export default <Suite>{
 			await nap(2)
 			{
 				const converter2 = await makeCurrencyConverter({
+					locale,
+					currencies,
 					persistence,
-					locale: "en-us",
 					baseCurrency: "USD",
-					currencies: defaultCurrencies,
 					downloadExchangeRates: downloadCounter.download,
 				})
 				converter2.setDisplayCurrency("CAD")
@@ -143,9 +147,9 @@ export default <Suite>{
 
 		async "failed exchange rate download, results in no conversions"() {
 			const converter = await makeCurrencyConverter({
-				locale: "en-us",
+				locale,
+				currencies,
 				baseCurrency: "USD",
-				currencies: defaultCurrencies,
 				persistence: mockPersistence.standard(),
 				downloadExchangeRates: mockExchangeRateDownloaders.failed(),
 			})
@@ -153,9 +157,9 @@ export default <Suite>{
 		},
 		async "setting an unknown userDisplayCurrency, falls back on baseCurrency"() {
 			const converter = await makeCurrencyConverter({
-				locale: "en-us",
+				locale,
+				currencies,
 				baseCurrency: "USD",
-				currencies: defaultCurrencies,
 				persistence: mockPersistence.standard(),
 				downloadExchangeRates: mockExchangeRateDownloaders.successful(),
 			})
@@ -170,9 +174,9 @@ export default <Suite>{
 			const persistence = mockPersistence.standard()
 			persistence.storage.setItem(persistence.storageKeys.userDisplayCurrency, "LOL")
 			const converter = await makeCurrencyConverter({
-				locale: "en-us",
+				locale,
+				currencies,
 				baseCurrency: "USD",
-				currencies: defaultCurrencies,
 				persistence: mockPersistence.standard(),
 				downloadExchangeRates: mockExchangeRateDownloaders.successful(),
 			})

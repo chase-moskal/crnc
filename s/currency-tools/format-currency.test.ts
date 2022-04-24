@@ -2,7 +2,7 @@
 import {Suite, expect} from "cynic"
 import {formatCurrency} from "./format-currency.js"
 
-const locale = "en-US"
+const locale = "en-us"
 
 export default <Suite>{
 	"displays human-readable currency": async() => {
@@ -17,11 +17,10 @@ export default <Suite>{
 			locale,
 		}).price).equals("$1,234.56 CAD")
 		expect(formatCurrency({
-			value: 1.23,
-			code: "XBT",
-			precision: 8,
+			value: 1234.56,
+			code: "GBP",
 			locale,
-		}).price).equals("Ƀ1.23000000 XBT")
+		}).price).equals("£1,234.56 GBP")
 	},
 	"rounds numbers": async() => {
 		expect(formatCurrency({

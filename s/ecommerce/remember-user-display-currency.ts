@@ -1,6 +1,7 @@
-import {Currencies, ConverterPersistence} from "../interfaces.js"
+
+import {ConverterPersistence} from "../interfaces.js"
+import {isCurrencyAllowed} from "./is-currency-allowed.js"
 import {assumeUserCurrency} from "./assume-user-currency.js"
-import {isCurrencyAvailable} from "./is-currency-available.js"
 
 export function rememberUserDisplayCurrency({
 		locale,
@@ -10,13 +11,13 @@ export function rememberUserDisplayCurrency({
 	}: {
 		locale: string
 		fallback: string
-		currencies: Currencies
+		currencies: string[]
 		persistence: ConverterPersistence
 	}) {
 	const remembered = storage.getItem(storageKeys.userDisplayCurrency)
 	return remembered
-		? isCurrencyAvailable(remembered, currencies)
+		? isCurrencyAllowed(remembered, currencies)
 			? remembered
-			: assumeUserCurrency({locale, fallback})
-		: assumeUserCurrency({locale, fallback})
+			: assumeUserCurrency({locale, currencies, fallback})
+		: assumeUserCurrency({locale, currencies, fallback})
 }

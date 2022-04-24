@@ -15,11 +15,13 @@ async function crncDemo() {
 	const value = 123.45
 	const inputCurrency = "CAD"
 	const outputCurrency = "USD"
+	const currencies = [inputCurrency, outputCurrency]
 
 	// ecommerce experiment
 	const {exchangeRates} = await ascertainEcommerceDetails({
+		currencies,
 		storeBaseCurrency: inputCurrency,
-		userDisplayCurrency: assumeUserCurrency({fallback: inputCurrency})
+		userDisplayCurrency: assumeUserCurrency({currencies, fallback: inputCurrency}),
 	})
 	console.log(`crnc exchangeRates`, exchangeRates)
 
