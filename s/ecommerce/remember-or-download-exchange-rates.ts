@@ -1,6 +1,6 @@
 
 import {cache} from "../toolbox/cache.js"
-import {Currencies, ConverterPersistence, DownloadExchangeRates, CurrencyCodes} from "../interfaces.js"
+import {Currencies, ConverterPersistence, DownloadExchangeRates, CurrencyCodes, CurrencyExchangeRates} from "../interfaces.js"
 
 export async function rememberOrDownloadExchangeRates({
 			currencies,
@@ -20,6 +20,11 @@ export async function rememberOrDownloadExchangeRates({
 		storageKey: storageKeys.exchangeRatesCache,
 		load: async() => downloadExchangeRates({currencyCodes}),
 	})
-	const {exchangeRates} = await ratesCache.read()
+	let exchangeRates: CurrencyExchangeRates
+	try {
+		const results = await ratesCache.read()
+		exchangeRates = results?.exchangeRates
+	}
+	catch (error) {}
 	return exchangeRates
 }

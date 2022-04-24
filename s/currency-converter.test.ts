@@ -141,7 +141,16 @@ export default <Suite>{
 	},
 	"fail gracefully": {
 
-		async "failed exchange rate download, results in no conversions"() {},
+		async "failed exchange rate download, results in no conversions"() {
+			const converter = await makeCurrencyConverter({
+				locale: "en-us",
+				baseCurrency: "USD",
+				currencies: defaultCurrencies,
+				persistence: mockPersistence.standard(),
+				downloadExchangeRates: mockExchangeRateDownloaders.failed(),
+			})
+			expect(converter.display(1).value).equals(1)
+		},
 		async "setting an unknown userDisplayCurrency, falls back on baseCurrency"() {},
 		async "remembering an unknown useDisplayCurrency, falls back on baseCurrency"() {},
 
