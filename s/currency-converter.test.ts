@@ -190,7 +190,17 @@ export default <Suite>{
 	},
 	"fail hard": {
 
-		async "unknown baseCurrency throws an error"() {},
+		async "unknown baseCurrency throws an error"() {
+			await expect(async() =>
+				await makeCurrencyConverter({
+					locale,
+					currencies,
+					baseCurrency: <any>"LOL",
+					persistence: mockPersistence.standard(),
+					downloadExchangeRates: mockExchangeRateDownloaders.successful(),
+				})
+			).throws()
+		},
 
 	},
 }
