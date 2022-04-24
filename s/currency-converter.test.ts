@@ -1,5 +1,7 @@
 
 import {Suite, expect} from "cynic"
+
+import {nap} from "./toolbox/nap.js"
 import {mockPersistence} from "./mocks/mock-persistence.js"
 import {makeCurrencyConverter} from "./currency-converter.js"
 import {currencies as defaultCurrencies} from "./ecommerce/currencies.js"
@@ -99,7 +101,42 @@ export default <Suite>{
 			}
 			expect(downloadCounter.count).equals(1)
 		},
-		async "cached exchange rates expire after an hour"() {},
+		async "when exchange rates cache expires, rates are redownloaded"() {
+			const persistence = mockPersistence.standard()
+			persistence.cacheLifespan = 1
+			const downloadCounter = mockExchangeRateDownloaders.downloadCounter()
+			{
+				const converter1 = await makeCurrencyConverter({
+					persistence,
+					locale: "en-us",
+					baseCurrency: "USD",
+					currencies: defaultCurrencies,
+					downloadExchangeRates: downloadCounter.download,
+				})
+				converter1.setDisplayCurrency("CAD")
+				const value = 1
+				const result = converter1.display(value)
+				expect(result.value).not.equals(value)
+				expect(result.value).equals(1.5)
+			}
+			expect(downloadCounter.count).equals(1)
+			await nap(2)
+			{
+				const converter2 = await makeCurrencyConverter({
+					persistence,
+					locale: "en-us",
+					baseCurrency: "USD",
+					currencies: defaultCurrencies,
+					downloadExchangeRates: downloadCounter.download,
+				})
+				converter2.setDisplayCurrency("CAD")
+				const value = 1
+				const result = converter2.display(value)
+				expect(result.value).not.equals(value)
+				expect(result.value).equals(1.5)
+			}
+			expect(downloadCounter.count).equals(2)
+		},
 
 	},
 	"fail gracefully": {
