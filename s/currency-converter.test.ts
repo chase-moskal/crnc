@@ -2,11 +2,13 @@
 import {Suite, expect} from "cynic"
 
 import {nap} from "./toolbox/nap.js"
-import {SupportedCurrencies} from "./interfaces.js"
+import {DownloadExchangeRatesResults, SupportedCurrencies} from "./interfaces.js"
 import {mockPersistence} from "./mocks/mock-persistence.js"
 import {makeCurrencyConverter} from "./currency-converter.js"
 import {exchangeRates} from "./currency-tools/testing-tools.js"
 import {mockExchangeRateDownloaders} from "./mocks/mock-download-exchange-rates.js"
+import {cache} from "./toolbox/cache.js"
+import {clone} from "./toolbox/clone.js"
 
 const locale = "en-us"
 const currencies = <SupportedCurrencies>Object.keys(exchangeRates)
@@ -153,6 +155,43 @@ export default <Suite>{
 				persistence: mockPersistence.standard(),
 				downloadExchangeRates: mockExchangeRateDownloaders.failed(),
 			})
+			expect(converter.display(1).value).equals(1)
+		},
+		async "remembering insufficient exchange rates, results in fresh download"() {
+			const downloadCounter = mockExchangeRateDownloaders.downloadCounter()
+			const persistence = mockPersistence.standard()
+			const ratesCache = cache<DownloadExchangeRatesResults>({
+				lifespan: persistence.cacheLifespan,
+				storage: persistence.storage,
+				storageKey: persistence.storageKeys.exchangeRatesCache,
+				load: async() => undefined,
+			})
+			const insufficientExchangeRates = clone(exchangeRates)
+			delete insufficientExchangeRates.GBP
+			await ratesCache.write({exchangeRates: insufficientExchangeRates})
+			const converter = await makeCurrencyConverter({
+				locale,
+				currencies: [...currencies],
+				baseCurrency: "USD",
+				persistence: mockPersistence.standard(),
+				downloadExchangeRates: downloadCounter.download,
+			})
+			expect(downloadCounter.count).equals(1)
+			expect(converter.snap.state.exchangeRates).defined()
+			expect(converter.display(1).value).equals(1)
+		},
+		async "if fresh rates are downloaded, but insufficient, ignore the rates"() {
+			const insufficientExchangeRates = clone(exchangeRates)
+			delete insufficientExchangeRates.GBP
+			const converter = await makeCurrencyConverter({
+				locale,
+				currencies,
+				baseCurrency: "USD",
+				persistence: mockPersistence.standard(),
+				downloadExchangeRates: mockExchangeRateDownloaders
+					.useTheseRates(insufficientExchangeRates),
+			})
+			expect(converter.snap.state.exchangeRates).not.defined()
 			expect(converter.display(1).value).equals(1)
 		},
 		async "setting an unknown userDisplayCurrency, falls back on baseCurrency"() {

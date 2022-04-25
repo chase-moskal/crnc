@@ -35,4 +35,8 @@ export const mockExchangeRateDownloaders = {
 	failed: (): DownloadExchangeRates => async() => {
 		throw new Error("failed to download rates")
 	},
+
+	useTheseRates: (exchangeRates: CurrencyExchangeRates) => async() => ({
+		exchangeRates,
+	}),
 }

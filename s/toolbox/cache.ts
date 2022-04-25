@@ -63,7 +63,7 @@ export function cache<xPayload extends any>({
 		},
 
 		async readCache() {
-			return getStore()
+			return getStore()?.payload
 		},
 
 		async write(payload: xPayload) {

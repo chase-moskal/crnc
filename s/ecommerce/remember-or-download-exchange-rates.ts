@@ -22,10 +22,37 @@ export async function rememberOrDownloadExchangeRates({
 	let exchangeRates: CurrencyExchangeRates
 
 	try {
-		const results = await ratesCache.read()
-		exchangeRates = results?.exchangeRates
+		let shouldDownloadFreshResults = false
+
+		let results = await ratesCache.readCache()
+		if (results)
+			shouldDownloadFreshResults = !ratesAreSufficient(results.exchangeRates, currencies)
+		else
+			shouldDownloadFreshResults = true
+
+		if (shouldDownloadFreshResults)
+			results = await ratesCache.readFresh()
+
+		const validAndSufficient = (
+			results?.exchangeRates
+			&& ratesAreSufficient(results.exchangeRates, currencies)
+		)
+
+		exchangeRates = validAndSufficient
+			? results.exchangeRates
+			: undefined
 	}
 	catch (error) {}
 
 	return exchangeRates
+}
+
+function ratesAreSufficient(rates: CurrencyExchangeRates, currencies: string[]) {
+	const exchangeKeys = Object.keys(rates)
+	const currenciesMissingInRates = currencies.filter(
+		currency => exchangeKeys.indexOf(currency) === -1
+	)
+	return currenciesMissingInRates.length
+		? false
+		: true
 }
