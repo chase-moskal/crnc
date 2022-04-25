@@ -65,12 +65,14 @@ export async function makeCurrencyConverter({
 		downloadExchangeRates,
 	})
 
-	setDisplayCurrency(rememberUserDisplayCurrency({
-		locale,
-		currencies,
-		persistence,
-		fallback: baseCurrency,
-	}))
+	setDisplayCurrency(
+		rememberUserDisplayCurrency({
+			locale,
+			currencies,
+			persistence,
+			fallback: baseCurrency,
+		})
+	)
 
 	return {
 
