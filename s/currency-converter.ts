@@ -44,12 +44,20 @@ export async function makeCurrencyConverter({
 		userDisplayCurrency: baseCurrency as string,
 	})
 
-	snap.state.userDisplayCurrency = rememberUserDisplayCurrency({
-		locale,
-		currencies,
-		persistence,
-		fallback: baseCurrency,
-	})
+	function setDisplayCurrency(code: string) {
+		const display = !!snap.state.exchangeRates
+			? isCurrencyAllowed(code, currencies)
+				? code
+				: baseCurrency
+			: baseCurrency
+
+		persistence.storage.setItem(
+			persistence.storageKeys.userDisplayCurrency,
+			display,
+		)
+
+		snap.state.userDisplayCurrency = display
+	}
 
 	snap.state.exchangeRates = await rememberOrDownloadExchangeRates({
 		currencies,
@@ -57,9 +65,18 @@ export async function makeCurrencyConverter({
 		downloadExchangeRates,
 	})
 
+	setDisplayCurrency(rememberUserDisplayCurrency({
+		locale,
+		currencies,
+		persistence,
+		fallback: baseCurrency,
+	}))
+
 	return {
 
 		snap: restricted(snap),
+
+		setDisplayCurrency,
 
 		display(valueInBaseCurrency: number, precision = 2) {
 			const {exchangeRates, baseCurrency, userDisplayCurrency} = snap.state
@@ -80,19 +97,6 @@ export async function makeCurrencyConverter({
 					code: baseCurrency,
 					value: valueInBaseCurrency,
 				})
-		},
-
-		setDisplayCurrency(code: string) {
-			const display = isCurrencyAllowed(code, currencies)
-				? code
-				: baseCurrency
-
-			persistence.storage.setItem(
-				persistence.storageKeys.userDisplayCurrency,
-				display,
-			)
-
-			snap.state.userDisplayCurrency = display
 		},
 	}
 }

@@ -2,7 +2,7 @@
 import {CurrencyExchangeRates, DownloadExchangeRates} from "../interfaces.js"
 import {exchangeRates as exampleExchangeRates} from "../currency-tools/testing-tools.js"
 
-const successful = (): DownloadExchangeRates => async({currencies}) => {
+const success = (): DownloadExchangeRates => async({currencies}) => {
 	const exchangeRates: CurrencyExchangeRates = {}
 	for (const code of currencies)
 		exchangeRates[code] = 1.0
@@ -16,11 +16,11 @@ const successful = (): DownloadExchangeRates => async({currencies}) => {
 
 export const mockExchangeRateDownloaders = {
 
-	successful,
+	success,
 
 	downloadCounter: () => {
 		let downloadCount = 0
-		const downloader = successful()
+		const downloader = success()
 		return {
 			get count() {
 				return downloadCount
@@ -32,7 +32,7 @@ export const mockExchangeRateDownloaders = {
 		}
 	},
 
-	failed: (): DownloadExchangeRates => async() => {
+	fail: (): DownloadExchangeRates => async() => {
 		throw new Error("failed to download rates")
 	},
 

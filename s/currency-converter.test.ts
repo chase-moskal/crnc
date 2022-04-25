@@ -23,7 +23,7 @@ export default <Suite>{
 				currencies,
 				baseCurrency: "USD",
 				persistence: mockPersistence.standard(),
-				downloadExchangeRates: mockExchangeRateDownloaders.successful(),
+				downloadExchangeRates: mockExchangeRateDownloaders.success(),
 			})
 			const value = 1
 			const result = converter.display(value)
@@ -36,7 +36,7 @@ export default <Suite>{
 				currencies,
 				baseCurrency: "USD",
 				persistence: mockPersistence.standard(),
-				downloadExchangeRates: mockExchangeRateDownloaders.successful(),
+				downloadExchangeRates: mockExchangeRateDownloaders.success(),
 			})
 			converter.setDisplayCurrency("CAD")
 			const value = 1
@@ -56,7 +56,7 @@ export default <Suite>{
 					currencies,
 					persistence,
 					baseCurrency: "USD",
-					downloadExchangeRates: mockExchangeRateDownloaders.successful(),
+					downloadExchangeRates: mockExchangeRateDownloaders.success(),
 				})
 				expect(converter1.snap.readable.userDisplayCurrency).equals("USD")
 				converter1.setDisplayCurrency("CAD")
@@ -68,7 +68,7 @@ export default <Suite>{
 					currencies,
 					persistence,
 					baseCurrency: "USD",
-					downloadExchangeRates: mockExchangeRateDownloaders.successful(),
+					downloadExchangeRates: mockExchangeRateDownloaders.success(),
 				})
 				expect(converter2.snap.readable.userDisplayCurrency).equals("CAD")
 			}
@@ -153,7 +153,7 @@ export default <Suite>{
 				currencies,
 				baseCurrency: "USD",
 				persistence: mockPersistence.standard(),
-				downloadExchangeRates: mockExchangeRateDownloaders.failed(),
+				downloadExchangeRates: mockExchangeRateDownloaders.fail(),
 			})
 			expect(converter.display(1).value).equals(1)
 		},
@@ -200,7 +200,7 @@ export default <Suite>{
 				currencies,
 				baseCurrency: "USD",
 				persistence: mockPersistence.standard(),
-				downloadExchangeRates: mockExchangeRateDownloaders.successful(),
+				downloadExchangeRates: mockExchangeRateDownloaders.success(),
 			})
 			const {state} = converter.snap
 			converter.setDisplayCurrency("LOL")
@@ -215,15 +215,42 @@ export default <Suite>{
 			const converter = await makeCurrencyConverter({
 				locale,
 				currencies,
+				persistence,
 				baseCurrency: "USD",
-				persistence: mockPersistence.standard(),
-				downloadExchangeRates: mockExchangeRateDownloaders.successful(),
+				downloadExchangeRates: mockExchangeRateDownloaders.success(),
 			})
 			const {state} = converter.snap
 			expect(state.userDisplayCurrency).equals("USD")
 			const value = 1
 			const result = converter.display(value)
 			expect(result.value).equals(value)
+		},
+		async "setting userDisplayCurrency without rates, falls back on baseCurrency"() {
+			const converter = await makeCurrencyConverter({
+				locale,
+				currencies: ["USD", "CAD"],
+				baseCurrency: "USD",
+				persistence: mockPersistence.standard(),
+				downloadExchangeRates: mockExchangeRateDownloaders.useTheseRates({
+					USD: 1,
+				}),
+			})
+			const {state} = converter.snap
+			converter.setDisplayCurrency("CAD")
+			expect(state.userDisplayCurrency).equals(state.baseCurrency)
+		},
+		async "remembering userDisplayCurrency without rates, falls back on baseCurrency"() {
+			const persistence = mockPersistence.standard()
+			persistence.storage.setItem(persistence.storageKeys.userDisplayCurrency, "CAD")
+			const converter = await makeCurrencyConverter({
+				locale,
+				persistence,
+				currencies: ["USD", "CAD"],
+				baseCurrency: "USD",
+				downloadExchangeRates: mockExchangeRateDownloaders.fail(),
+			})
+			const {state} = converter.snap
+			expect(state.userDisplayCurrency).equals(state.baseCurrency)
 		},
 
 	},
@@ -236,7 +263,7 @@ export default <Suite>{
 					currencies,
 					baseCurrency: <any>"LOL",
 					persistence: mockPersistence.standard(),
-					downloadExchangeRates: mockExchangeRateDownloaders.successful(),
+					downloadExchangeRates: mockExchangeRateDownloaders.success(),
 				})
 			).throws()
 		},
@@ -247,7 +274,7 @@ export default <Suite>{
 					currencies: <any>[...currencies, "LOL"],
 					baseCurrency: "USD",
 					persistence: mockPersistence.standard(),
-					downloadExchangeRates: mockExchangeRateDownloaders.successful(),
+					downloadExchangeRates: mockExchangeRateDownloaders.success(),
 				})
 			).throws()
 		},
