@@ -98,7 +98,7 @@ export interface BasicStorage {
 }
 
 export interface JsonStorage {
-	getItem<T>(key: string): T
+	getItem<T>(key: string): undefined | T
 	setItem<T>(key: string, value: T): void
 	removeItem(key: string): void
 }

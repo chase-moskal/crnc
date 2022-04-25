@@ -1,7 +1,8 @@
 
 import {BasicStorage} from "../interfaces.js"
+import {jsonStorage} from "./json-storage.js"
 
-export function cache<xPayload extends any>({
+export function cache<xPayload>({
 		lifespan, storage, storageKey, load,
 	}: {
 		lifespan: number
@@ -10,64 +11,58 @@ export function cache<xPayload extends any>({
 		load: () => Promise<xPayload>
 	}) {
 
-	type CacheStore = {
+	const store = jsonStorage(storage)
+
+	type CacheRecord = {
 		time: number
 		payload: xPayload
 	}
 
-	function timeIsValid(time: number) {
+	function timeHasNotExpired(time: number) {
 		const since = Date.now() - time
 		return since < lifespan
 	}
 
-	function getStore(): undefined | CacheStore {
-		const data = storage.getItem(storageKey)
-		let validStore: CacheStore
-		if (data) {
-			try {
-				const store = JSON.parse(data)
-				if (timeIsValid(store.time))
-					validStore = store
-			}
-			catch (error) {}
-		}
-		return validStore
+	function getCachedPayload(): undefined | xPayload {
+		const record = store.getItem<CacheRecord>(storageKey)
+		return (record && timeHasNotExpired(record.time))
+			? record.payload
+			: undefined
 	}
 
-	function setStore(payload: xPayload) {
-		const store: CacheStore = {
+	function setCachedPayload(payload: xPayload) {
+		const record: CacheRecord = {
 			payload,
 			time: Date.now(),
 		}
-		const data = JSON.stringify(store)
-		storage.setItem(storageKey, data)
+		store.setItem(storageKey, record)
 	}
 
-	async function loadAndWriteCacheStore() {
+	async function loadFreshAndWriteToCache() {
 		const payload = await load()
-		setStore(payload)
+		setCachedPayload(payload)
 		return payload
 	}
 
 	return {
 
 		async read() {
-			const store = getStore()
-			return store
-				? store.payload
-				: await loadAndWriteCacheStore()
+			const payload = getCachedPayload()
+			return payload
+				? payload
+				: await loadFreshAndWriteToCache()
 		},
 
 		async readFresh() {
-			return loadAndWriteCacheStore()
+			return loadFreshAndWriteToCache()
 		},
 
 		async readCache() {
-			return getStore()?.payload
+			return getCachedPayload()
 		},
 
 		async write(payload: xPayload) {
-			setStore(payload)
+			setCachedPayload(payload)
 		},
 
 		async clear() {
