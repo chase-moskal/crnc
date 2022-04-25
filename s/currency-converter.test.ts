@@ -2,13 +2,13 @@
 import {Suite, expect} from "cynic"
 
 import {nap} from "./toolbox/nap.js"
-import {DownloadExchangeRatesResults, SupportedCurrencies} from "./interfaces.js"
+import {cache} from "./toolbox/cache.js"
+import {clone} from "./toolbox/clone.js"
 import {mockPersistence} from "./mocks/mock-persistence.js"
 import {makeCurrencyConverter} from "./currency-converter.js"
 import {exchangeRates} from "./currency-tools/testing-tools.js"
+import {DownloadExchangeRatesResults, SupportedCurrencies} from "./interfaces.js"
 import {mockExchangeRateDownloaders} from "./mocks/mock-download-exchange-rates.js"
-import {cache} from "./toolbox/cache.js"
-import {clone} from "./toolbox/clone.js"
 
 const locale = "en-us"
 const currencies = <SupportedCurrencies>Object.keys(exchangeRates)
