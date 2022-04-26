@@ -46,6 +46,21 @@ export default <Suite>{
 			expect(result.value).not.equals(value)
 			expect(result.value).equals(1.5)
 		},
+		async "currency inputs are case-insensitive"() {
+			const converter = await makeCurrencyConverter({
+				locale,
+				currencies: currencies.map(code => code === "CAD" ? "Cad" : code),
+				baseCurrency: "usD",
+				persistence: mockPersistence.standard(),
+				listenForStorageChange,
+				downloadExchangeRates: mockExchangeRateDownloaders.success(),
+			})
+			converter.setDisplayCurrency("cAd")
+			const value = 1
+			const result = converter.display(value)
+			expect(result.value).not.equals(value)
+			expect(result.value).equals(1.5)
+		},
 
 	},
 	"persistence": {

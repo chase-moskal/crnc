@@ -49,6 +49,9 @@ export async function makeCurrencyConverter({
 		}) => void
 	}) {
 
+	currencies = currencies.map(currency => currency.toUpperCase())
+	baseCurrency = baseCurrency.toUpperCase()
+
 	validateCurrencyConverterParams({baseCurrency, currencies, currencyLibrary})
 
 	const snap = snapstate({
@@ -59,6 +62,7 @@ export async function makeCurrencyConverter({
 	})
 
 	function updateLocalStateUserDisplayCurrency(code: string) {
+		code = code ?code.toUpperCase() :baseCurrency
 		const display = !!snap.state.exchangeRates
 			? isCurrencyAllowed(code, currencies)
 				? code
@@ -93,6 +97,7 @@ export async function makeCurrencyConverter({
 		snap: restricted(snap),
 
 		setDisplayCurrency(code: string) {
+			code = code.toUpperCase()
 			updateLocalStateUserDisplayCurrency(code)
 			writeCurrentUserDisplayCurrencyToStorage()
 		},
