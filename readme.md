@@ -5,7 +5,7 @@
 
 💵 currency conversions and formatting library  
 📜 typescript library for web browsers  
-🛒 used by [shopper](https://github.com/chase-moskal/shopper) for displaying prices  
+🛒 used by [shopper](https://github.com/chase-moskal/shopper#readme) for displaying prices  
 ⏬ download exchange rates from the [bank of canada](https://www.bankofcanada.ca/valet/docs)  
 💾 rates are cached for an hour by default  
 🌎 formats numbers in accordance to browser locale  
@@ -18,9 +18,9 @@
 ## 🏦 available currencies
 
 - all currency codes are in [iso 4217 format](https://en.wikipedia.org/wiki/ISO_4217#Active_codes)
-- the rates from bank of canada only support the [currencies listed here](https://github.com/chase-moskal/crnc/blob/master/s/currency-tools/bank-of-canada/supported-currencies.ts)
-- crnc only supports the currencies [listed here](https://github.com/chase-moskal/crnc/blob/master/s/ecommerce/currency-library.ts) *— ✍️ help add to this!*
-- crnc relates user locales to preferred currencies in [this mapping](https://github.com/chase-moskal/crnc/blob/master/s/ecommerce/currency-library.ts) *— ✍️ help add to this!*
+- the rates from bank of canada only support the [currencies listed here](./s/currency-tools/bank-of-canada/supported-currencies.ts)
+- crnc only supports the currencies [listed here](./s/ecommerce/currency-library.ts) *— ✍️ help add to this!*
+- crnc relates user locales to preferred currencies in [this mapping](./s/ecommerce/currency-library.ts) *— ✍️ help add to this!*
 
 <br/>
 <br/>
