@@ -71,13 +71,6 @@ export async function makeCurrencyConverter({
 		snap.state.userDisplayCurrency = display
 	}
 
-	function writeCurrentUserDisplayCurrencyToStorage() {
-		persistence.storage.setItem(
-			persistence.storageKeys.userDisplayCurrency,
-			snap.state.userDisplayCurrency,
-		)
-	}
-
 	snap.state.exchangeRates = await rememberOrDownloadExchangeRates({
 		currencies: <any>currencies,
 		persistence,
@@ -106,7 +99,10 @@ export async function makeCurrencyConverter({
 		setDisplayCurrency(code: string) {
 			code = code.toUpperCase()
 			updateLocalStateUserDisplayCurrency(code)
-			writeCurrentUserDisplayCurrencyToStorage()
+			persistence.storage.setItem(
+				persistence.storageKeys.userDisplayCurrency,
+				snap.state.userDisplayCurrency,
+			)
 		},
 
 		display(valueInBaseCurrency: number, precision = 2) {
