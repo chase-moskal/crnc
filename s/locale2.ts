@@ -32,7 +32,8 @@ SOFTWARE.
 
 */
 
-const global: any = (function() { return this })()
+const global: any = Function("return this")()
+
 const process: any = undefined
 
 function formatLocale(locale: any) {

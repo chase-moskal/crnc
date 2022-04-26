@@ -6,10 +6,9 @@ import {currencyLibrary} from "./ecommerce/currency-library.js"
 import {formatCurrency} from "./currency-tools/format-currency.js"
 import {isCurrencyAllowed} from "./ecommerce/is-currency-allowed.js"
 import {convertAndFormatCurrency} from "./currency-tools/convert-and-format-currency.js"
-import {rememberUserDisplayCurrency} from "./ecommerce/remember-user-display-currency.js"
 import {validateCurrencyConverterParams} from "./ecommerce/validate-currency-converter-params.js"
 import {rememberOrDownloadExchangeRates} from "./ecommerce/remember-or-download-exchange-rates.js"
-import {ConverterPersistence, CurrencyExchangeRates, DownloadExchangeRates} from "./interfaces.js"
+import {ConverterPersistence, CurrencyDetails, CurrencyExchangeRates, DownloadExchangeRates, SupportedCurrency} from "./interfaces.js"
 import {downloadExchangeRates as defaultDownloadExchangeRates} from "./currency-tools/download-exchange-rates.js"
 
 export const oneHour = 1000 * 60 * 60
@@ -95,6 +94,14 @@ export async function makeCurrencyConverter({
 	return {
 
 		snap: restricted(snap),
+
+		getCurrencyDetails() {
+			const details: {[key: string]: CurrencyDetails} = {}
+			for (const code of currencies) {
+				details[code] = (<any>currencyLibrary)[code]
+			}
+			return details
+		},
 
 		setDisplayCurrency(code: string) {
 			code = code.toUpperCase()
