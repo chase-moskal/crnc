@@ -27,11 +27,12 @@
 
 ## 💱 currency converter
 
+- we use the currency converter to convert and format prices into the user's locale and currency preference.
 - the currency converter assumes you're running an ecommerce situation where all your prices are share a single `baseCurrency`.
-- we use the currency converter to convert and format base-currency prices into the user's currency preference.
-- exchange rates are downloaded from the internet.
-- the currency converter will display prices in the base currency, until rates are downloaded.
-- if the rates download fails, the currency converter will continue to work, only showing prices in the base currency.
+- exchange rates are downloaded onto the clientside, and cached, to avoid spamming the bank of canada's api.
+- when the user's currency preference is changed, it's persisted into localstorage, and propagates across opened browser tabs.
+- if the exchange rates download fails, the currency converter will continue to work, falling back to showing prices in the base currency.
+- while the exchange rates are downloading, the converter will display prices in the base currency.
 
 ### currency converter usage examples
 
