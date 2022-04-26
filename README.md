@@ -30,10 +30,19 @@
   ```js
   import {makeCurrencyConverter} from "crnc/x/currency-converter.js"
 
-  const currencyConverter = await makeCurrencyConverter({
+  const currencyConverter = makeCurrencyConverter({
+
+    // all values you run through this converter must be in this currency
     baseCurrency: "USD",
-    currencies: ["USD", "CAD", "AUD", "EUR", "GBP", "JPY"],
+
+    // other currencies you desire (base currency is already assumed)
+    currencies: ["CAD", "AUD", "EUR", "GBP", "JPY"],
   })
+
+  // you can wait for the exchange rates to finish downloading.
+  // but if you don't, all prices will be displayed in the base currency,
+  // until the download is complete.
+  await currencyConverter.exchangeRatesDownload
   ```
 
 - display money in the base currency (always works)
@@ -47,7 +56,7 @@
   dollars.currency.symbol // "$"
   ```
 
-- display money in the user's preferred currency
+- display money in the user's preferred currency (initially auto-detected based on locale)
   ```js
   const money = currencyConverter.display(1234.56)
   money.value  // 1571.42
@@ -58,9 +67,9 @@
   money.currency.symbol // "$"
   ```
 
-- change the user currency preference
+- change the currency preference
   ```js
-  currencyConverter.setUserCurrencyPreference("EUR")
+  currencyConverter.setCurrencyPreference("EUR")
 
   const euros = currencyConverter.display(1234.56)
   euros.value  // 1152.97
@@ -71,7 +80,7 @@
   euros.currency.symbol // "$"
   ```
 
-- display money in a specific currency, ignoring the user currency preference
+- display money in a specific currency, ignoring the currency preference
   ```js
   const pounds = currencyConverter.display("1234.56", {currency: "GBP"})
   pounds.value  // 968.90
@@ -91,9 +100,9 @@
   dollars.price // "£969 GBP"
   ```
 
-- check what is the user's currency preference
+- check what is the current currency preference
   ```js
-  currencyConverter.userCurrencyPreference
+  currencyConverter.currencyPreference
     // {
     //   code: "CAD",
     //   name: "Canadian Dollar",
@@ -107,7 +116,7 @@
     // {
     //   USD: {
     //     code: "USD",
-    //     name: "US Dollar",
+    //     name: "United States Dollar",
     //     symbol: "$",
     //   },
     //   CAD: {
@@ -118,10 +127,21 @@
     // }
   ```
 
+- check what currency is targeted for conversions, despite the currency preference.  
+  the currency preference may not be available, in which case the base currency will be targeted.
+  ```js
+  currencyConverter.targetCurrency
+    // {
+    //   code: "USD",
+    //   name: "United States Dollar",
+    //   symbol: "$",
+    // }
+  ```
+
 - listen for changes (see [snapstate docs](https://github.com/chase-moskal/snapstate#readme))
   ```js
   currencyConverter.snap.subscribe(() => {
-    userCurrencyPreference // "JPY"
+    currencyPreference // "JPY"
     availableCurrencies // {USD: {...}, CAD: {...}}
   })
   ```
@@ -132,13 +152,13 @@
 
 - `currencies` — the array of currencies you want available for conversions. only these currencies will be requested for, when downloading exchange rates.
 
-- `locale` ***(optional)*** — the locale string for formatting numbers, and also for guessing the user's preferred display currency. *(default: auto-detected from browser)*
+- `locale` ***(optional)*** — the locale string for formatting numbers, and also for guessing the currency preference. *(default: auto-detected from browser)*
 
 - `downloadExchangeRates` ***(optional)*** — async function for fetching exchange rates. *(default: downloads from the bank of canada api)*
 
-- `listenForStorageChanges` ***(optional)*** — function that instructs the currency converter when it should refresh the user's display currency preference from storage, for example, when another tab fires a storage event, so when the user changes the preference, it affects multiple tabs. *(default: adds a storage event listener to the window)*
+- `listenForStorageChanges` ***(optional)*** — function that instructs the currency converter when it should reload the currency preference from storage, for example, when another tab fires a storage event, so when the user changes the preference, it affects multiple tabs. *(default: adds a storage event listener to the window)*
 
-- `persistence` ***(optional)*** — details about where to cache exchange rates and store the user's display currency preference. *(default: shown below)*
+- `persistence` ***(optional)*** — details about where to cache exchange rates and store the currency preference. *(default: shown below)*
   ```js
   persistence: {
 
@@ -153,8 +173,8 @@
       // storage key used to caching exchange rates
       exchangeRatesCache: "crnc-exchange-rates-cache",
 
-      // storage key used to store user's currency preference
-      userCurrencyPreference: "crnc-user-currency-preference",
+      // storage key used to store currency preference
+      currencyPreference: "crnc-currency-preference",
     },
   },
   ```

@@ -1,13 +1,13 @@
 
 import {cache} from "../toolbox/cache.js"
-import {ConverterPersistence, DownloadExchangeRates, SupportedCurrencies, CurrencyExchangeRates} from "../interfaces.js"
+import {ConverterPersistence, DownloadExchangeRates, CurrencyExchangeRates} from "../interfaces.js"
 
 export async function rememberOrDownloadExchangeRates({
 			currencies,
 			persistence: {storage, storageKeys, cacheLifespan},
 			downloadExchangeRates,
 		}: {
-		currencies: SupportedCurrencies
+		currencies: string[]
 		persistence: ConverterPersistence
 		downloadExchangeRates: DownloadExchangeRates
 	}) {
@@ -16,33 +16,28 @@ export async function rememberOrDownloadExchangeRates({
 		storage,
 		lifespan: cacheLifespan,
 		storageKey: storageKeys.exchangeRatesCache,
-		load: async() => downloadExchangeRates({currencies: currencies}),
+		load: async() => downloadExchangeRates({currencies}),
 	})
 
-	let exchangeRates: CurrencyExchangeRates
+	let shouldDownloadFreshResults = false
 
-	try {
-		let shouldDownloadFreshResults = false
+	let results = await ratesCache.readCache()
+	if (results)
+		shouldDownloadFreshResults = !ratesAreSufficient(results.exchangeRates, currencies)
+	else
+		shouldDownloadFreshResults = true
 
-		let results = await ratesCache.readCache()
-		if (results)
-			shouldDownloadFreshResults = !ratesAreSufficient(results.exchangeRates, currencies)
-		else
-			shouldDownloadFreshResults = true
+	if (shouldDownloadFreshResults)
+		results = await ratesCache.readFresh()
 
-		if (shouldDownloadFreshResults)
-			results = await ratesCache.readFresh()
+	const validAndSufficient = (
+		results?.exchangeRates
+		&& ratesAreSufficient(results.exchangeRates, currencies)
+	)
 
-		const validAndSufficient = (
-			results?.exchangeRates
-			&& ratesAreSufficient(results.exchangeRates, currencies)
-		)
-
-		exchangeRates = validAndSufficient
-			? results.exchangeRates
-			: undefined
-	}
-	catch (error) {}
+	const exchangeRates = validAndSufficient
+		? results.exchangeRates
+		: undefined
 
 	return exchangeRates
 }

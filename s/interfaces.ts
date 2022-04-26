@@ -111,22 +111,27 @@ export interface ConverterPersistence {
 	cacheLifespan: number
 	storage: BasicStorage
 	storageKeys: {
-		userDisplayCurrency: string
+		currencyPreference: string
 		exchangeRatesCache: string
 	}
 }
 
 export interface ListenForStorageChange {
-	({}: {refreshUserDisplayCurrency: () => void}): void
+	({}: {reloadCurrencyPreference: () => void}): void
 }
 
-export interface CurrencyConverterParams {
+export interface ConverterParams {
 	currencies: string[]
 	baseCurrency: string
 	locale?: string
 	persistence?: ConverterPersistence
 	downloadExchangeRates?: DownloadExchangeRates
 	listenForStorageChange?: ListenForStorageChange
+}
+
+export interface ConverterDisplayOptions {
+	currency?: string
+	precision?: number
 }
 
 export type CurrencyConverter = Await<ReturnType<typeof makeCurrencyConverter>>

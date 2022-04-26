@@ -1,14 +1,17 @@
 
 import {CurrencyLibrary} from "../interfaces.js"
-import {isCurrencyAllowed} from "./is-currency-allowed.js"
 
-export function validateCurrencyConverterParams({
+export function validateConverterParams({
 		baseCurrency, currencies, currencyLibrary
 	}: {
 		baseCurrency: string
 		currencies: string[]
 		currencyLibrary: CurrencyLibrary
 	}) {
+
+	baseCurrency = baseCurrency.toUpperCase()
+	currencies = currencies.map(currency => currency.toUpperCase())
+	currencies = [...new Set([baseCurrency, ...currencies])]
 
 	const libraryKeys = Object.keys(currencyLibrary)
 	const notInLibrary = currencies
@@ -17,6 +20,5 @@ export function validateCurrencyConverterParams({
 	if (notInLibrary.length)
 		throw new Error(`these currency codes are not in the currencyLibrary (${notInLibrary.join(", ")})`)
 
-	if (!isCurrencyAllowed(baseCurrency, currencies))
-		throw new Error(`baseCurrency "${baseCurrency}" is not an available currency`)
+	return {baseCurrency, currencies}
 }

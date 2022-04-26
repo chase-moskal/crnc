@@ -1,6 +1,6 @@
 
 import {mockBasicStorage} from "./mock-basic-storage.js"
-import {BasicStorage, ConverterPersistence} from "../interfaces.js"
+import {BasicStorage, ConverterPersistence, ListenForStorageChange} from "../interfaces.js"
 import {defaultPersistenceStorageKeys, oneHour} from "../ecommerce/currency-converter-defaults.js"
 
 const storageKeys = defaultPersistenceStorageKeys
@@ -41,11 +41,11 @@ export const mockPersistence = {
 							t.triggerStorageChangeOnThisTab()
 						}
 				},
-				listenForStorageChange: ({refreshUserDisplayCurrency}: {
-						refreshUserDisplayCurrency: () => void
+				listenForStorageChange: <ListenForStorageChange>(({reloadCurrencyPreference}: {
+						reloadCurrencyPreference: () => void
 					}) => {
-					trigger = () => refreshUserDisplayCurrency()
-				},
+					trigger = () => reloadCurrencyPreference()
+				}),
 			}
 			tabs.add(tab)
 			return tab

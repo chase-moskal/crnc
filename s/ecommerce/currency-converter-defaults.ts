@@ -3,10 +3,11 @@ import {ConverterPersistence, ListenForStorageChange} from "../interfaces.js"
 
 export const oneHour = 1000 * 60 * 60
 
-export const defaultPersistenceStorageKeys = Object.freeze({
-	exchangeRatesCache: "crnc-exchange-rates-cache",
-	userDisplayCurrency: "crnc-user-display-currency",
-})
+export const defaultPersistenceStorageKeys: ConverterPersistence["storageKeys"]
+	= Object.freeze({
+		exchangeRatesCache: "crnc-exchange-rates-cache",
+		currencyPreference: "crnc-currency-preference",
+	})
 
 export const defaultPersistence = (): ConverterPersistence => ({
 	storage: window.localStorage,
@@ -16,14 +17,14 @@ export const defaultPersistence = (): ConverterPersistence => ({
 
 export const defaultListenForStorageChange = (
 	(persistence: ConverterPersistence): ListenForStorageChange =>
-		({refreshUserDisplayCurrency}) =>
+		({reloadCurrencyPreference}) =>
 			window.addEventListener("storage", storageEvent => {
 
 				const storageEventIsRelevant =
 					storageEvent.storageArea === persistence.storage
-					&& storageEvent.key === persistence.storageKeys.userDisplayCurrency
+					&& storageEvent.key === persistence.storageKeys.currencyPreference
 
 				if (storageEventIsRelevant)
-					refreshUserDisplayCurrency()
+					reloadCurrencyPreference()
 			})
 )
