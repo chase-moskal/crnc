@@ -9,10 +9,10 @@ import {makeCurrencyConverter} from "./currency-converter.js"
 import {exchangeRates} from "./currency-tools/testing-tools.js"
 import {DownloadExchangeRatesResults, SupportedCurrencies} from "./interfaces.js"
 import {mockExchangeRateDownloaders} from "./mocks/mock-download-exchange-rates.js"
-import {unproxy} from "@chasemoskal/snapstate"
 
 const locale = "en-us"
 const currencies = <SupportedCurrencies>Object.keys(exchangeRates)
+const listenForStorageChange = () => {}
 
 export default <Suite>{
 
@@ -24,6 +24,7 @@ export default <Suite>{
 				currencies,
 				baseCurrency: "USD",
 				persistence: mockPersistence.standard(),
+				listenForStorageChange,
 				downloadExchangeRates: mockExchangeRateDownloaders.success(),
 			})
 			const value = 1
@@ -37,6 +38,7 @@ export default <Suite>{
 				currencies,
 				baseCurrency: "USD",
 				persistence: mockPersistence.standard(),
+				listenForStorageChange,
 				downloadExchangeRates: mockExchangeRateDownloaders.success(),
 			})
 			converter.setDisplayCurrency("CAD")
@@ -55,6 +57,7 @@ export default <Suite>{
 				currencies,
 				baseCurrency: "USD",
 				persistence: tab1.persistence,
+				listenForStorageChange: tab1.listenForStorageChange,
 				downloadExchangeRates: mockExchangeRateDownloaders.success(),
 			})
 			expect(converter1.snap.state.userDisplayCurrency).equals("USD")
@@ -68,6 +71,7 @@ export default <Suite>{
 				currencies,
 				baseCurrency: "USD",
 				persistence: tab2.persistence,
+				listenForStorageChange: tab2.listenForStorageChange,
 				downloadExchangeRates: mockExchangeRateDownloaders.success(),
 			})
 			expect(converter2.snap.state.userDisplayCurrency).equals("CAD")
@@ -89,6 +93,7 @@ export default <Suite>{
 					currencies,
 					persistence,
 					baseCurrency: "USD",
+					listenForStorageChange,
 					downloadExchangeRates: mockExchangeRateDownloaders.success(),
 				})
 				expect(converter1.snap.readable.userDisplayCurrency).equals("USD")
@@ -101,6 +106,7 @@ export default <Suite>{
 					currencies,
 					persistence,
 					baseCurrency: "USD",
+					listenForStorageChange,
 					downloadExchangeRates: mockExchangeRateDownloaders.success(),
 				})
 				expect(converter2.snap.readable.userDisplayCurrency).equals("CAD")
@@ -115,6 +121,7 @@ export default <Suite>{
 					currencies,
 					persistence,
 					baseCurrency: "USD",
+					listenForStorageChange,
 					downloadExchangeRates: downloadCounter.download,
 				})
 				converter1.setDisplayCurrency("CAD")
@@ -130,6 +137,7 @@ export default <Suite>{
 					currencies,
 					persistence,
 					baseCurrency: "USD",
+					listenForStorageChange,
 					downloadExchangeRates: downloadCounter.download,
 				})
 				converter2.setDisplayCurrency("CAD")
@@ -150,6 +158,7 @@ export default <Suite>{
 					currencies,
 					persistence,
 					baseCurrency: "USD",
+					listenForStorageChange,
 					downloadExchangeRates: downloadCounter.download,
 				})
 				converter1.setDisplayCurrency("CAD")
@@ -166,6 +175,7 @@ export default <Suite>{
 					currencies,
 					persistence,
 					baseCurrency: "USD",
+					listenForStorageChange,
 					downloadExchangeRates: downloadCounter.download,
 				})
 				converter2.setDisplayCurrency("CAD")
@@ -186,6 +196,7 @@ export default <Suite>{
 				currencies,
 				baseCurrency: "USD",
 				persistence: mockPersistence.standard(),
+				listenForStorageChange,
 				downloadExchangeRates: mockExchangeRateDownloaders.fail(),
 			})
 			expect(converter.display(1).value).equals(1)
@@ -207,6 +218,7 @@ export default <Suite>{
 				currencies: [...currencies],
 				baseCurrency: "USD",
 				persistence: mockPersistence.standard(),
+				listenForStorageChange,
 				downloadExchangeRates: downloadCounter.download,
 			})
 			expect(downloadCounter.count).equals(1)
@@ -221,6 +233,7 @@ export default <Suite>{
 				currencies,
 				baseCurrency: "USD",
 				persistence: mockPersistence.standard(),
+				listenForStorageChange,
 				downloadExchangeRates: mockExchangeRateDownloaders
 					.useTheseRates(insufficientExchangeRates),
 			})
@@ -233,6 +246,7 @@ export default <Suite>{
 				currencies,
 				baseCurrency: "USD",
 				persistence: mockPersistence.standard(),
+				listenForStorageChange,
 				downloadExchangeRates: mockExchangeRateDownloaders.success(),
 			})
 			const {state} = converter.snap
@@ -250,6 +264,7 @@ export default <Suite>{
 				currencies,
 				persistence,
 				baseCurrency: "USD",
+				listenForStorageChange,
 				downloadExchangeRates: mockExchangeRateDownloaders.success(),
 			})
 			const {state} = converter.snap
@@ -264,6 +279,7 @@ export default <Suite>{
 				currencies: ["USD", "CAD"],
 				baseCurrency: "USD",
 				persistence: mockPersistence.standard(),
+				listenForStorageChange,
 				downloadExchangeRates: mockExchangeRateDownloaders.useTheseRates({
 					USD: 1,
 				}),
@@ -280,6 +296,7 @@ export default <Suite>{
 				persistence,
 				currencies: ["USD", "CAD"],
 				baseCurrency: "USD",
+				listenForStorageChange,
 				downloadExchangeRates: mockExchangeRateDownloaders.fail(),
 			})
 			const {state} = converter.snap
@@ -296,6 +313,7 @@ export default <Suite>{
 					currencies,
 					baseCurrency: <any>"LOL",
 					persistence: mockPersistence.standard(),
+					listenForStorageChange,
 					downloadExchangeRates: mockExchangeRateDownloaders.success(),
 				})
 			).throws()
@@ -307,6 +325,7 @@ export default <Suite>{
 					currencies: <any>[...currencies, "LOL"],
 					baseCurrency: "USD",
 					persistence: mockPersistence.standard(),
+					listenForStorageChange,
 					downloadExchangeRates: mockExchangeRateDownloaders.success(),
 				})
 			).throws()

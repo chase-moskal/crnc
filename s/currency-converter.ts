@@ -25,16 +25,17 @@ export async function makeCurrencyConverter({
 				exchangeRatesCache: "crnc-exchange-rates-cache",
 				userDisplayCurrency: "crnc-user-display-currency",
 			},
-			listenForStorageChange: refreshUserDisplayCurrency =>
-				window.addEventListener("storage", refreshUserDisplayCurrency),
 		},
 		downloadExchangeRates = defaultDownloadExchangeRates,
+		listenForStorageChange = refreshUserDisplayCurrency =>
+				window.addEventListener("storage", refreshUserDisplayCurrency),
 	}: {
 		currencies: string[]
 		baseCurrency: string
 		locale?: string
 		persistence?: ConverterPersistence
 		downloadExchangeRates?: DownloadExchangeRates
+		listenForStorageChange?: (refreshUserDisplayCurrency: () => void) => void
 	}) {
 
 	validateCurrencyConverterParams({baseCurrency, currencies, currencyLibrary})
@@ -74,7 +75,7 @@ export async function makeCurrencyConverter({
 	)
 
 	refreshUserDisplayCurrency()
-	persistence.listenForStorageChange(refreshUserDisplayCurrency)
+	listenForStorageChange(refreshUserDisplayCurrency)
 
 	return {
 

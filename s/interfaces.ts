@@ -116,5 +116,4 @@ export interface ConverterPersistence {
 		userDisplayCurrency: string
 		exchangeRatesCache: string
 	}
-	listenForStorageChange: (refreshUserDisplayCurrency: () => void) => void,
 }

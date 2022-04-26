@@ -14,7 +14,6 @@ export const mockPersistence = {
 		storageKeys,
 		cacheLifespan: oneHour,
 		storage: mockBasicStorage(),
-		listenForStorageChange: () => {},
 	}),
 
 	multipleTabsSharingOneStorage: () => {
@@ -35,11 +34,6 @@ export const mockPersistence = {
 				storage,
 				storageKeys,
 				cacheLifespan: oneHour,
-				listenForStorageChange: refresh => {
-					trigger = () => {
-						refresh()
-					}
-				},
 			})
 			const tab = {
 				persistence,
@@ -49,6 +43,9 @@ export const mockPersistence = {
 						if (t !== tab) {
 							t.triggerStorageChangeOnThisTab()
 						}
+				},
+				listenForStorageChange: (refresh: () => void) => {
+					trigger = () => refresh()
 				},
 			}
 			tabs.add(tab)
