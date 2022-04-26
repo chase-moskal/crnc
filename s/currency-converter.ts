@@ -9,8 +9,8 @@ import {convertAndFormatCurrency} from "./currency-tools/convert-and-format-curr
 import {rememberUserDisplayCurrency} from "./ecommerce/remember-user-display-currency.js"
 import {validateCurrencyConverterParams} from "./ecommerce/validate-currency-converter-params.js"
 import {rememberOrDownloadExchangeRates} from "./ecommerce/remember-or-download-exchange-rates.js"
+import {ConverterPersistence, CurrencyExchangeRates, DownloadExchangeRates} from "./interfaces.js"
 import {downloadExchangeRates as defaultDownloadExchangeRates} from "./currency-tools/download-exchange-rates.js"
-import {ConverterPersistence, CurrencyExchangeRates, DownloadExchangeRates, SupportedCurrencies, SupportedCurrency} from "./interfaces.js"
 
 export const oneHour = 1000 * 60 * 60
 
@@ -25,11 +25,13 @@ export async function makeCurrencyConverter({
 				exchangeRatesCache: "crnc-exchange-rates-cache",
 				userDisplayCurrency: "crnc-user-display-currency",
 			},
+			listenForStorageChange: refreshUserDisplayCurrency =>
+				window.addEventListener("storage", refreshUserDisplayCurrency),
 		},
 		downloadExchangeRates = defaultDownloadExchangeRates,
 	}: {
-		currencies: SupportedCurrencies
-		baseCurrency: SupportedCurrency
+		currencies: string[]
+		baseCurrency: string
 		locale?: string
 		persistence?: ConverterPersistence
 		downloadExchangeRates?: DownloadExchangeRates
@@ -44,41 +46,44 @@ export async function makeCurrencyConverter({
 		userDisplayCurrency: baseCurrency as string,
 	})
 
-	function setDisplayCurrency(code: string) {
+	function updateLocalStateUserDisplayCurrency(code: string) {
 		const display = !!snap.state.exchangeRates
 			? isCurrencyAllowed(code, currencies)
 				? code
 				: baseCurrency
 			: baseCurrency
 
-		persistence.storage.setItem(
-			persistence.storageKeys.userDisplayCurrency,
-			display,
-		)
-
 		snap.state.userDisplayCurrency = display
 	}
 
+	function writeCurrentUserDisplayCurrencyToStorage() {
+		persistence.storage.setItem(
+			persistence.storageKeys.userDisplayCurrency,
+			snap.state.userDisplayCurrency,
+		)
+	}
+
 	snap.state.exchangeRates = await rememberOrDownloadExchangeRates({
-		currencies,
+		currencies: <any>currencies,
 		persistence,
 		downloadExchangeRates,
 	})
 
-	setDisplayCurrency(
-		rememberUserDisplayCurrency({
-			locale,
-			currencies,
-			persistence,
-			fallback: baseCurrency,
-		})
+	const refreshUserDisplayCurrency = () => updateLocalStateUserDisplayCurrency(
+		persistence.storage.getItem(persistence.storageKeys.userDisplayCurrency)
 	)
+
+	refreshUserDisplayCurrency()
+	persistence.listenForStorageChange(refreshUserDisplayCurrency)
 
 	return {
 
 		snap: restricted(snap),
 
-		setDisplayCurrency,
+		setDisplayCurrency(code: string) {
+			updateLocalStateUserDisplayCurrency(code)
+			writeCurrentUserDisplayCurrencyToStorage()
+		},
 
 		display(valueInBaseCurrency: number, precision = 2) {
 			const {exchangeRates, baseCurrency, userDisplayCurrency} = snap.state

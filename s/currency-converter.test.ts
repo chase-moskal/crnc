@@ -9,6 +9,7 @@ import {makeCurrencyConverter} from "./currency-converter.js"
 import {exchangeRates} from "./currency-tools/testing-tools.js"
 import {DownloadExchangeRatesResults, SupportedCurrencies} from "./interfaces.js"
 import {mockExchangeRateDownloaders} from "./mocks/mock-download-exchange-rates.js"
+import {unproxy} from "@chasemoskal/snapstate"
 
 const locale = "en-us"
 const currencies = <SupportedCurrencies>Object.keys(exchangeRates)
@@ -43,6 +44,38 @@ export default <Suite>{
 			const result = converter.display(value)
 			expect(result.value).not.equals(value)
 			expect(result.value).equals(1.5)
+		},
+
+		async "user display currency change in other tab propagates to all tabs"() {
+			const context = mockPersistence.multipleTabsSharingOneStorage()
+
+			const tab1 = context.makeTab()
+			const converter1 = await makeCurrencyConverter({
+				locale,
+				currencies,
+				baseCurrency: "USD",
+				persistence: tab1.persistence,
+				downloadExchangeRates: mockExchangeRateDownloaders.success(),
+			})
+			expect(converter1.snap.state.userDisplayCurrency).equals("USD")
+			converter1.setDisplayCurrency("CAD")
+			tab1.triggerStorageChangeOnAllOtherTabs()
+			expect(converter1.snap.state.userDisplayCurrency).equals("CAD")
+
+			const tab2 = context.makeTab()
+			const converter2 = await makeCurrencyConverter({
+				locale,
+				currencies,
+				baseCurrency: "USD",
+				persistence: tab2.persistence,
+				downloadExchangeRates: mockExchangeRateDownloaders.success(),
+			})
+			expect(converter2.snap.state.userDisplayCurrency).equals("CAD")
+			converter2.setDisplayCurrency("GBP")
+			tab2.triggerStorageChangeOnAllOtherTabs()
+			expect(converter2.snap.state.userDisplayCurrency).equals("GBP")
+
+			expect(converter1.snap.state.userDisplayCurrency).equals("GBP")
 		},
 
 	},
