@@ -27,7 +27,7 @@
 
 ## 💱 currency converter
 
-- we use the currency converter to convert and format prices into the user's locale and currency preference.
+- we use the currency converter to convert and format prices according to the user's locale and currency preference.
 - the currency converter assumes you're running an ecommerce situation where all your prices are share a single `baseCurrency`.
 - exchange rates are downloaded onto the clientside, and cached, to avoid spamming the bank of canada's api.
 - when the user's currency preference is changed, it's persisted into localstorage, and propagates across opened browser tabs.
