@@ -23,8 +23,7 @@ export const defaultListenForStorageChange = (
 					storageEvent.storageArea === persistence.storage
 					&& storageEvent.key === persistence.storageKeys.userDisplayCurrency
 
-				if (storageEventIsRelevant) {
+				if (storageEventIsRelevant)
 					refreshUserDisplayCurrency()
-				}
 			})
 )
