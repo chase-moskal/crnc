@@ -108,9 +108,9 @@ export function makeCurrencyConverter({
 			return getAvailableCurrencies()
 		},
 
-		setCurrencyPreference(code: string) {
-			code = code.toUpperCase()
-			updateLocalCurrencyPreference(code)
+		setCurrencyPreference(currency: string) {
+			currency = currency.toUpperCase()
+			updateLocalCurrencyPreference(currency)
 			persistence.storage.setItem(
 				persistence.storageKeys.currencyPreference,
 				snap.state.currencyPreference,
