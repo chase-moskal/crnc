@@ -103,10 +103,6 @@ export interface JsonStorage {
 	removeItem(key: string): void
 }
 
-export type Await<P> = P extends Promise<infer V>
-	? V
-	: never
-
 export interface ConverterPersistence {
 	cacheLifespan: number
 	storage: BasicStorage
@@ -134,4 +130,4 @@ export interface ConverterDisplayOptions {
 	precision?: number
 }
 
-export type CurrencyConverter = Await<ReturnType<typeof makeCurrencyConverter>>
+export type CurrencyConverter = ReturnType<typeof makeCurrencyConverter>
