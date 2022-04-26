@@ -3,17 +3,17 @@ import {restricted, snapstate} from "@chasemoskal/snapstate"
 
 import {locale2} from "./locale2.js"
 import {formatCurrency} from "./currency-tools/format-currency.js"
+import {isCurrencyAllowed} from "./ecommerce/is-currency-allowed.js"
+import {assumeUserCurrency} from "./ecommerce/assume-user-currency.js"
+import {currenciesByLocales} from "./ecommerce/currencies-by-locales.js"
 import {getDetailsForCurrencies} from "./ecommerce/currencies-to-details.js"
 import {validateConverterParams} from "./ecommerce/validate-converter-params.js"
 import {convertAndFormatCurrency} from "./currency-tools/convert-and-format-currency.js"
 import {currencyLibrary as defaultCurrencyLibrary} from "./ecommerce/currency-library.js"
 import {rememberOrDownloadExchangeRates} from "./ecommerce/remember-or-download-exchange-rates.js"
 import {defaultListenForStorageChange, defaultPersistence} from "./ecommerce/currency-converter-defaults.js"
+import {ConverterDisplayOptions, ConverterParams, CurrencyExchangeRates, CurrencyLibrary} from "./interfaces.js"
 import {downloadExchangeRates as defaultDownloadExchangeRates} from "./currency-tools/download-exchange-rates.js"
-import {ConverterDisplayOptions, ConverterParams, CurrencyDetails, CurrencyExchangeRates, CurrencyLibrary} from "./interfaces.js"
-import {isCurrencyAllowed} from "./ecommerce/is-currency-allowed.js"
-import {assumeUserCurrency} from "./ecommerce/assume-user-currency.js"
-import {currenciesByLocales} from "./ecommerce/currencies-by-locales.js"
 
 const currencyLibrary: CurrencyLibrary = defaultCurrencyLibrary
 
