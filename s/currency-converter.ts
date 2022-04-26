@@ -50,7 +50,6 @@ export async function makeCurrencyConverter({
 
 	currencies = currencies.map(currency => currency.toUpperCase())
 	baseCurrency = baseCurrency.toUpperCase()
-
 	validateCurrencyConverterParams({baseCurrency, currencies, currencyLibrary})
 
 	const snap = snapstate({
@@ -58,6 +57,12 @@ export async function makeCurrencyConverter({
 		currencies,
 		baseCurrency,
 		userDisplayCurrency: baseCurrency as string,
+	})
+
+	snap.state.exchangeRates = await rememberOrDownloadExchangeRates({
+		currencies: <any>currencies,
+		persistence,
+		downloadExchangeRates,
 	})
 
 	function updateLocalStateUserDisplayCurrency(code: string) {
@@ -70,12 +75,6 @@ export async function makeCurrencyConverter({
 
 		snap.state.userDisplayCurrency = display
 	}
-
-	snap.state.exchangeRates = await rememberOrDownloadExchangeRates({
-		currencies: <any>currencies,
-		persistence,
-		downloadExchangeRates,
-	})
 
 	const refreshUserDisplayCurrency = () => updateLocalStateUserDisplayCurrency(
 		persistence.storage.getItem(persistence.storageKeys.userDisplayCurrency)
