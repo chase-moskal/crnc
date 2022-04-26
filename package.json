@@ -34,6 +34,7 @@
 		"exchange-rates"
 	],
 	"dependencies": {
-		"@chasemoskal/snapstate": "^0.0.8"
+		"@chasemoskal/snapstate": "^0.0.8",
+		"lit": "^2.2.2"
 	}
 }

@@ -7,8 +7,10 @@
 
 💵 currency conversions and formatting library  
 📜 typescript library for web browsers  
+🔌 web components for easy drop-in html-only integrations  
+🧬 functions exposed for advanced integrations  
 🛒 used by [shopper](https://github.com/chase-moskal/shopper#readme) for displaying prices  
-⏬ download exchange rates from the [bank of canada](https://www.bankofcanada.ca/valet/docs)  
+⏬ downloads exchange rates from the [bank of canada](https://www.bankofcanada.ca/valet/docs)  
 💾 rates are cached for an hour by default  
 🌎 formats numbers in accordance to browser locale  
 💴 assumes user's currency preference based on locale  
