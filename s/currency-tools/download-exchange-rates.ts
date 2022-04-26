@@ -1,6 +1,6 @@
 
 import {requestXml} from "../toolbox/request-xml.js"
-import {validateCurrenciesAreSupportedByBankOfCanada} from "./bank-of-canada/supported-currencies.js"
+import {filterOutCurrenciesNotSupportedByBankOfCanada} from "./bank-of-canada/supported-currencies.js"
 import {CurrencyExchangeRates, DownloadExchangeRatesParams, DownloadExchangeRatesResults} from "../interfaces.js"
 
 /**
@@ -11,7 +11,7 @@ export async function downloadExchangeRates({
 		currencies,
 	}: DownloadExchangeRatesParams): Promise<DownloadExchangeRatesResults> {
 
-	validateCurrenciesAreSupportedByBankOfCanada(currencies)
+	currencies = filterOutCurrenciesNotSupportedByBankOfCanada(currencies)
 
 	const canadian = "CAD"
 	const nonCanadianOnly = (currency: string) => currency !== canadian
