@@ -1,5 +1,7 @@
 
-# ⁓ **c** — **r** — **n** — **c** ⁓
+# ⁓ ***crnc*** ⁓
+
+*crnc helps you display prices to users on the web.*
 
 ## 📦 **`npm install crnc`**
 
