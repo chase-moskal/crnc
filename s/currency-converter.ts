@@ -8,8 +8,8 @@ import {isCurrencyAllowed} from "./ecommerce/is-currency-allowed.js"
 import {convertAndFormatCurrency} from "./currency-tools/convert-and-format-currency.js"
 import {validateCurrencyConverterParams} from "./ecommerce/validate-currency-converter-params.js"
 import {rememberOrDownloadExchangeRates} from "./ecommerce/remember-or-download-exchange-rates.js"
-import {ConverterPersistence, CurrencyDetails, CurrencyExchangeRates, DownloadExchangeRates, SupportedCurrency} from "./interfaces.js"
 import {downloadExchangeRates as defaultDownloadExchangeRates} from "./currency-tools/download-exchange-rates.js"
+import {ConverterPersistence, CurrencyDetails, CurrencyExchangeRates, DownloadExchangeRates} from "./interfaces.js"
 
 export const oneHour = 1000 * 60 * 60
 
