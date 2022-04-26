@@ -19,7 +19,7 @@
 
 - all currency codes are in [iso 4217 format](https://en.wikipedia.org/wiki/ISO_4217#Active_codes)
 - the rates from bank of canada only support the [currencies listed here](https://github.com/chase-moskal/crnc/blob/master/s/currency-tools/bank-of-canada/supported-currencies.ts)
-- crnc only supports the currencies [listed here](https://github.com/chase-moskal/crnc/blob/master/s/ecommerce/currency-library.ts)
+- crnc only supports the currencies [listed here](https://github.com/chase-moskal/crnc/blob/master/s/ecommerce/currency-library.ts) *— ✍️ help me add to this!*
 
 <br/>
 <br/>
@@ -258,23 +258,28 @@
 ### currency tools
 
 - [downloadExchangeRates](./s/currency-tools/download-exchange-rates.ts)  
-	downloads exchange rates from the [bank of canada's open api](https://www.bankofcanada.ca/valet/docs)
+  `import {downloadExchangeRates} from "crnc/x/currency-tools/download-exchange-rates.ts"`  
+	downloads exchange rates from the [bank of canada's open api](https://www.bankofcanada.ca/valet/docs).  
 
 - [convertCurrency](./s/currency-tools/convert-currency.ts)  
-	exchange a money value from one currency to another
+  `import {convertCurrency} from "crnc/x/currency-tools/convert-currency.ts"`  
+	exchange a money value from one currency to another.  
 
 - [formatCurrency](./s/currency-tools/format-currency.ts)  
-	express a money value as a human-friendly string  
-	(adds dollar signs and commas and stuff)
+  `import {formatCurrency} from "crnc/x/currency-tools/format-currency.ts"`  
+	express a money value as a human-friendly string.  
+	(adds dollar signs and commas and stuff)  
 
 - [convertAndFormatCurrency](./s/currency-tools/convert-and-format-currency.ts)  
-	exchange a money value, and format it, in one shot  
-	(simply a convenience function, combines convertCurrency and formatCurrency)
+  `import {convertAndFormatCurrency} from "crnc/x/currency-tools/convert-and-format-currency.ts"`  
+	exchange a money value, and format it, in one shot.  
+	(simply a convenience function, combines convertCurrency and formatCurrency)  
 
 ### ecommerce helpers
 
 - [assumeUserCurrency](./s/ecommerce/assume-user-currency.ts)  
-	assume what currency the user might want to see based on locale
+  `import {assumeUserCurrency} from "crnc/x/ecommerce/assume-user-currency.ts"`  
+	assume what currency the user might want to see based on locale.  
 
 <br/>
 <br/>
