@@ -27,15 +27,26 @@ export async function makeCurrencyConverter({
 			},
 		},
 		downloadExchangeRates = defaultDownloadExchangeRates,
-		listenForStorageChange = refreshUserDisplayCurrency =>
-				window.addEventListener("storage", refreshUserDisplayCurrency),
+		listenForStorageChange = ({refreshUserDisplayCurrency}) =>
+			window.addEventListener("storage", storageEvent => {
+
+				const storageEventIsRelevant =
+					storageEvent.storageArea === persistence.storage
+					&& storageEvent.key === persistence.storageKeys.userDisplayCurrency
+
+				if (storageEventIsRelevant) {
+					refreshUserDisplayCurrency()
+				}
+			}),
 	}: {
 		currencies: string[]
 		baseCurrency: string
 		locale?: string
 		persistence?: ConverterPersistence
 		downloadExchangeRates?: DownloadExchangeRates
-		listenForStorageChange?: (refreshUserDisplayCurrency: () => void) => void
+		listenForStorageChange?: ({}: {
+			refreshUserDisplayCurrency: () => void
+		}) => void
 	}) {
 
 	validateCurrencyConverterParams({baseCurrency, currencies, currencyLibrary})
@@ -75,7 +86,7 @@ export async function makeCurrencyConverter({
 	)
 
 	refreshUserDisplayCurrency()
-	listenForStorageChange(refreshUserDisplayCurrency)
+	listenForStorageChange({refreshUserDisplayCurrency})
 
 	return {
 

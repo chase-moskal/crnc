@@ -44,8 +44,10 @@ export const mockPersistence = {
 							t.triggerStorageChangeOnThisTab()
 						}
 				},
-				listenForStorageChange: (refresh: () => void) => {
-					trigger = () => refresh()
+				listenForStorageChange: ({refreshUserDisplayCurrency}: {
+						refreshUserDisplayCurrency: () => void
+					}) => {
+					trigger = () => refreshUserDisplayCurrency()
 				},
 			}
 			tabs.add(tab)
