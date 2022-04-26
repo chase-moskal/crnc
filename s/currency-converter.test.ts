@@ -235,6 +235,12 @@ export default <Suite>{
 			})
 			await converter.exchangeRatesDownload
 			expect(converter.display(1).value).equals(1)
+			converter.setCurrencyPreference("CAD")
+			expect(converter.currencyPreference).equals("CAD")
+			expect(converter.targetCurrency).equals("USD")
+			const money = converter.display(1.00)
+			expect(money.currency.code).equals("USD")
+			expect(money.value).equals(1.00)
 		},
 		async "remembering insufficient exchange rates, results in fresh download"() {
 			const downloadCounter = mockExchangeRateDownloaders.downloadCounter()
@@ -349,7 +355,7 @@ export default <Suite>{
 				makeCurrencyConverter({
 					locale,
 					currencies,
-					baseCurrency: <any>"LOL",
+					baseCurrency: "LOL",
 					persistence: mockPersistence.standard(),
 					listenForStorageChange,
 					downloadExchangeRates: mockExchangeRateDownloaders.success(),
@@ -360,7 +366,7 @@ export default <Suite>{
 			expect(() =>
 				makeCurrencyConverter({
 					locale,
-					currencies: <any>[...currencies, "LOL"],
+					currencies: [...currencies, "LOL"],
 					baseCurrency: "USD",
 					persistence: mockPersistence.standard(),
 					listenForStorageChange,
