@@ -31,7 +31,6 @@ export default <Suite>{
 			const result = converter.display(value)
 			expect(result.value).equals(value)
 		},
-
 		async "fresh startup can convert USD to CAD"() {
 			const converter = await makeCurrencyConverter({
 				locale,
@@ -48,6 +47,36 @@ export default <Suite>{
 			expect(result.value).equals(1.5)
 		},
 
+	},
+	"persistence": {
+
+		async "user display currency is remembered"() {
+			const persistence = mockPersistence.standard()
+			{
+				const converter1 = await makeCurrencyConverter({
+					locale,
+					currencies,
+					persistence,
+					baseCurrency: "USD",
+					listenForStorageChange,
+					downloadExchangeRates: mockExchangeRateDownloaders.success(),
+				})
+				expect(converter1.snap.readable.userDisplayCurrency).equals("USD")
+				converter1.setDisplayCurrency("CAD")
+				expect(converter1.snap.readable.userDisplayCurrency).equals("CAD")
+			}
+			{
+				const converter2 = await makeCurrencyConverter({
+					locale,
+					currencies,
+					persistence,
+					baseCurrency: "USD",
+					listenForStorageChange,
+					downloadExchangeRates: mockExchangeRateDownloaders.success(),
+				})
+				expect(converter2.snap.readable.userDisplayCurrency).equals("CAD")
+			}
+		},
 		async "user display currency change in other tab propagates to all tabs"() {
 			const context = mockPersistence.multipleTabsSharingOneStorage()
 
@@ -80,37 +109,6 @@ export default <Suite>{
 			expect(converter2.snap.state.userDisplayCurrency).equals("GBP")
 
 			expect(converter1.snap.state.userDisplayCurrency).equals("GBP")
-		},
-
-	},
-	"persistence": {
-
-		async "user display currency is remembered"() {
-			const persistence = mockPersistence.standard()
-			{
-				const converter1 = await makeCurrencyConverter({
-					locale,
-					currencies,
-					persistence,
-					baseCurrency: "USD",
-					listenForStorageChange,
-					downloadExchangeRates: mockExchangeRateDownloaders.success(),
-				})
-				expect(converter1.snap.readable.userDisplayCurrency).equals("USD")
-				converter1.setDisplayCurrency("CAD")
-				expect(converter1.snap.readable.userDisplayCurrency).equals("CAD")
-			}
-			{
-				const converter2 = await makeCurrencyConverter({
-					locale,
-					currencies,
-					persistence,
-					baseCurrency: "USD",
-					listenForStorageChange,
-					downloadExchangeRates: mockExchangeRateDownloaders.success(),
-				})
-				expect(converter2.snap.readable.userDisplayCurrency).equals("CAD")
-			}
 		},
 		async "exchange rates are cached"() {
 			const persistence = mockPersistence.standard()
