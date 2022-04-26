@@ -1,12 +1,9 @@
 
-import {oneHour} from "../currency-converter.js"
-import {BasicStorage, ConverterPersistence} from "../interfaces.js"
 import {mockBasicStorage} from "./mock-basic-storage.js"
+import {BasicStorage, ConverterPersistence} from "../interfaces.js"
+import {defaultPersistenceStorageKeys, oneHour} from "../ecommerce/currency-converter-defaults.js"
 
-const storageKeys = {
-	exchangeRatesCache: "crnc-exchange-rates-cache",
-	userDisplayCurrency: "crnc-user-display-currency",
-}
+const storageKeys = defaultPersistenceStorageKeys
 
 export const mockPersistence = {
 

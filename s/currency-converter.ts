@@ -6,47 +6,20 @@ import {currencyLibrary} from "./ecommerce/currency-library.js"
 import {formatCurrency} from "./currency-tools/format-currency.js"
 import {isCurrencyAllowed} from "./ecommerce/is-currency-allowed.js"
 import {convertAndFormatCurrency} from "./currency-tools/convert-and-format-currency.js"
+import {CurrencyConverterParams, CurrencyDetails, CurrencyExchangeRates} from "./interfaces.js"
 import {validateCurrencyConverterParams} from "./ecommerce/validate-currency-converter-params.js"
 import {rememberOrDownloadExchangeRates} from "./ecommerce/remember-or-download-exchange-rates.js"
+import {defaultListenForStorageChange, defaultPersistence} from "./ecommerce/currency-converter-defaults.js"
 import {downloadExchangeRates as defaultDownloadExchangeRates} from "./currency-tools/download-exchange-rates.js"
-import {ConverterPersistence, CurrencyDetails, CurrencyExchangeRates, DownloadExchangeRates} from "./interfaces.js"
-
-export const oneHour = 1000 * 60 * 60
 
 export async function makeCurrencyConverter({
 		currencies,
 		baseCurrency,
 		locale = locale2(),
-		persistence = {
-			storage: window.localStorage,
-			cacheLifespan: oneHour,
-			storageKeys: {
-				exchangeRatesCache: "crnc-exchange-rates-cache",
-				userDisplayCurrency: "crnc-user-display-currency",
-			},
-		},
+		persistence = defaultPersistence(),
 		downloadExchangeRates = defaultDownloadExchangeRates,
-		listenForStorageChange = ({refreshUserDisplayCurrency}) =>
-			window.addEventListener("storage", storageEvent => {
-
-				const storageEventIsRelevant =
-					storageEvent.storageArea === persistence.storage
-					&& storageEvent.key === persistence.storageKeys.userDisplayCurrency
-
-				if (storageEventIsRelevant) {
-					refreshUserDisplayCurrency()
-				}
-			}),
-	}: {
-		currencies: string[]
-		baseCurrency: string
-		locale?: string
-		persistence?: ConverterPersistence
-		downloadExchangeRates?: DownloadExchangeRates
-		listenForStorageChange?: ({}: {
-			refreshUserDisplayCurrency: () => void
-		}) => void
-	}) {
+		listenForStorageChange = defaultListenForStorageChange(persistence),
+	}: CurrencyConverterParams) {
 
 	currencies = currencies.map(currency => currency.toUpperCase())
 	baseCurrency = baseCurrency.toUpperCase()
@@ -89,9 +62,8 @@ export async function makeCurrencyConverter({
 
 		getCurrencyDetails() {
 			const details: {[key: string]: CurrencyDetails} = {}
-			for (const code of currencies) {
+			for (const code of currencies)
 				details[code] = (<any>currencyLibrary)[code]
-			}
 			return details
 		},
 

@@ -107,8 +107,6 @@ export type Await<P> = P extends Promise<infer V>
 	? V
 	: never
 
-export type CurrencyConverter = Await<ReturnType<typeof makeCurrencyConverter>>
-
 export interface ConverterPersistence {
 	cacheLifespan: number
 	storage: BasicStorage
@@ -117,3 +115,18 @@ export interface ConverterPersistence {
 		exchangeRatesCache: string
 	}
 }
+
+export interface ListenForStorageChange {
+	({}: {refreshUserDisplayCurrency: () => void}): void
+}
+
+export interface CurrencyConverterParams {
+	currencies: string[]
+	baseCurrency: string
+	locale?: string
+	persistence?: ConverterPersistence
+	downloadExchangeRates?: DownloadExchangeRates
+	listenForStorageChange?: ListenForStorageChange
+}
+
+export type CurrencyConverter = Await<ReturnType<typeof makeCurrencyConverter>>
