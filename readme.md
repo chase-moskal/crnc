@@ -9,6 +9,7 @@
 ## 📦 **`npm install crnc`**
 
 🕹️ [**live online demo of crnc**](https://crnc.chasemoskal.com/)  
+🖊️ [codepen example html install](https://codepen.io/ChaseMoskal/pen/YzYmKLv)  
 
 🎁 web component for displaying prices to users  
 🌎 formats prices in accordance to browser locale  
