@@ -41,7 +41,7 @@
     ```html
     <crnc-config
       base-currency="usd"
-      currencies="cad aud eur gbp"
+      currencies="cad aud eur gbp jpy"
     ></crnc-config>
     ```
     you can change these values.
