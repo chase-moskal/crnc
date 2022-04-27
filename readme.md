@@ -4,19 +4,23 @@
 # ⁓ ***crnc*** ⁓
 
 *currency conversions and formatting for the web.*  
-*crnc helps you display prices to users.*  
+*crnc helps you display prices to users, in their favorite currency.*  
 
 ## 📦 **`npm install crnc`**
 
-📜 typescript library for web browsers  
-🔌 easy html install (universal web components)  
-🧬 functions for advanced integrations  
-🛒 used by [shopper](https://github.com/chase-moskal/shopper#readme) for displaying prices  
+🕹️ [**live online demo of crnc**](https://chasemoskal.com/crnc/)  
+
+🎁 web component for displaying prices to users  
+🌎 formats prices in accordance to browser locale  
 👤 user can switch their own currency preference  
 ⏬ exchange rates are downloaded from the [bank of canada](https://www.bankofcanada.ca/valet/docs)  
-💾 rates are cached for an hour by default  
-🌎 formats numbers in accordance to browser locale  
-💴 initially assumes user's currency preference based on locale  
+🛒 used by [shopper](https://github.com/chase-moskal/shopper#readme) for displaying store prices  
+
+🔌 easy html install (universal web components)  
+📜 typescript library for web browsers  
+🧬 functions for advanced integrations  
+💾 exchange rates are cached for an hour by default  
+💴 initially assumes user currency preference based on locale  
 💖 free and open source, just for you  
 
 <br/>
@@ -24,14 +28,14 @@
 
 ## 🔌 easy html install
 
-1. insert this html code into your document's `<head>`
+1. insert this html code into your page's `<head>`
     ```html
     <script defer type=importmap-shim src="https://unpkg.com/crnc@0.0/x/importmap-unpkg.json"></script>
     <script defer type=module-shim src="https://unpkg.com/crnc@0.0/x/html-install.js"></script>
     <script defer src="https://unpkg.com/es-module-shims@1.5/dist/es-module-shims.js"></script>
     ```
 
-1. insert this *crnc* configuration snippet into your document's `<head>`
+1. insert this *crnc* configuration snippet into your page's `<head>`
     ```html
     <crnc-config
       base-currency="usd"
@@ -42,7 +46,7 @@
     - `base-currency` is the currency that your store users for all its pricing.
     - `currencies` are the other currencies you want to allow conversions for.
 
-1. use the `<crnc-price>` element anywhere in your document's `<body>`
+1. use the `<crnc-price>` element anywhere in your page's `<body>`
     ```html
     <crnc-price value="1234.56"></crnc-price>
     ```
