@@ -30,6 +30,9 @@ export class CrncPrice extends mixinRequireContext<PriceContext>()(Component) {
 	comparedValue: number
 
 	@property({type: Boolean, reflect: true})
+	right: boolean = false
+
+	@property({type: Boolean, reflect: true})
 	"menu-open": boolean
 
 	#toggleMenu = () => {

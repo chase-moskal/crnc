@@ -12,8 +12,4 @@ export default css`
 	outline: var(--focus-outline, 3px solid cyan);
 }
 
-:host([initially-hidden]), :host([hidden]) {
-	display: none;
-}
-
 `

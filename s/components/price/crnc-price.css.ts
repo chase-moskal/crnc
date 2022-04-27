@@ -91,8 +91,9 @@ button {
 	border: 10px solid transparent;
 	border-bottom-color: var(--price-display-menu-background, white);
 	top: -20px;
-	left: var(--price-display-menu-border-radius, 5px);
-	right: var(--price-display-menu-border-radius, 5px);
+	left: 0;
+	right: 0;
+	margin: auto;
 }
 
 :host([right]) .menu {
