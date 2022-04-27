@@ -8,7 +8,7 @@
 
 ## 📦 **`npm install crnc`**
 
-🕹️ [**live online demo of crnc**](https://chasemoskal.com/crnc/)  
+🕹️ [**live online demo of crnc**](https://crnc.chasemoskal.com/)  
 
 🎁 web component for displaying prices to users  
 🌎 formats prices in accordance to browser locale  
