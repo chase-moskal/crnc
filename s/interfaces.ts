@@ -1,14 +1,17 @@
 
 import {makeCurrencyConverter} from "./currency-converter.js"
+import {currencyLibrary} from "./ecommerce/currency-library.js"
 import {bankOfCanadaSupportedCurrencies} from "./currency-tools/bank-of-canada/supported-currencies.js"
 
 export type BankOfCanadaSupportedCurrencies =
 	typeof bankOfCanadaSupportedCurrencies[number]
 
-export type CurrencyCodes = BankOfCanadaSupportedCurrencies[]
+export type SupportedCurrency = keyof typeof currencyLibrary
+
+export type SupportedCurrencies = SupportedCurrency[]
 
 export interface DownloadExchangeRatesParams {
-	currencyCodes?: CurrencyCodes
+	currencies: string[]
 }
 
 export interface DownloadExchangeRatesResults {
@@ -35,26 +38,26 @@ export interface FormattableNumber {
 	locale?: string
 }
 
-export interface Currency {
+export interface CurrencyDetails {
 	code: string   // "USD"
 	name: string   // United States Dollar
 	symbol: string // "$"
 }
 
 export interface Money {
-	currency: Currency
+	currency: CurrencyDetails
 	value: number  // 1234.56
 	amount: string // "1,234.56"
 	price: string  // "$1,234.56 USD"
 }
 
-export interface Currencies {
-	[code: string]: Currency
+export interface CurrencyLibrary {
+	[code: string]: CurrencyDetails
 }
 
 export interface FormatCurrencyParams extends FormattableNumber {
 	code: string
-	currencies?: Currencies
+	currencyLibrary?: CurrencyLibrary
 }
 
 export interface ConvertAndFormatCurrencyParams extends FormattableNumber {
@@ -69,6 +72,7 @@ export interface CurrenciesByLocales {
 
 export interface AssumeUserCurrencyParams {
 	fallback: string
+	currencies: string[]
 	locale?: string
 	currenciesByLocales?: CurrenciesByLocales
 }
@@ -94,22 +98,36 @@ export interface BasicStorage {
 }
 
 export interface JsonStorage {
-	getItem<T>(key: string): T
-	setItem<T>(key: string, value: T): string
+	getItem<T>(key: string): undefined | T
+	setItem<T>(key: string, value: T): void
 	removeItem(key: string): void
 }
-
-export type Await<P> = P extends Promise<infer V>
-	? V
-	: never
-
-export type CurrencyConverter = Await<ReturnType<typeof makeCurrencyConverter>>
 
 export interface ConverterPersistence {
 	cacheLifespan: number
 	storage: BasicStorage
 	storageKeys: {
-		userDisplayCurrency: string
+		currencyPreference: string
 		exchangeRatesCache: string
 	}
 }
+
+export interface ListenForStorageChange {
+	({}: {reloadCurrencyPreference: () => void}): void
+}
+
+export interface ConverterParams {
+	currencies: string[]
+	baseCurrency: string
+	locale?: string
+	persistence?: ConverterPersistence
+	downloadExchangeRates?: DownloadExchangeRates
+	listenForStorageChange?: ListenForStorageChange
+}
+
+export interface ConverterDisplayOptions {
+	currency?: string
+	precision?: number
+}
+
+export type CurrencyConverter = ReturnType<typeof makeCurrencyConverter>

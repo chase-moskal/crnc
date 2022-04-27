@@ -3,97 +3,147 @@ import {restricted, snapstate} from "@chasemoskal/snapstate"
 
 import {locale2} from "./locale2.js"
 import {formatCurrency} from "./currency-tools/format-currency.js"
-import {isCurrencyAvailable} from "./ecommerce/is-currency-available.js"
-import {currencies as defaultCurrencies} from "./ecommerce/currencies.js"
+import {isCurrencyAllowed} from "./ecommerce/is-currency-allowed.js"
+import {assumeUserCurrency} from "./ecommerce/assume-user-currency.js"
+import {currenciesByLocales} from "./ecommerce/currencies-by-locales.js"
+import {getDetailsForCurrencies} from "./ecommerce/currencies-to-details.js"
+import {validateConverterParams} from "./ecommerce/validate-converter-params.js"
 import {convertAndFormatCurrency} from "./currency-tools/convert-and-format-currency.js"
-import {rememberUserDisplayCurrency} from "./ecommerce/remember-user-display-currency.js"
+import {currencyLibrary as defaultCurrencyLibrary} from "./ecommerce/currency-library.js"
 import {rememberOrDownloadExchangeRates} from "./ecommerce/remember-or-download-exchange-rates.js"
+import {defaultListenForStorageChange, defaultPersistence} from "./ecommerce/currency-converter-defaults.js"
+import {ConverterDisplayOptions, ConverterParams, CurrencyExchangeRates, CurrencyLibrary} from "./interfaces.js"
 import {downloadExchangeRates as defaultDownloadExchangeRates} from "./currency-tools/download-exchange-rates.js"
-import {ConverterPersistence, Currencies, CurrencyExchangeRates, DownloadExchangeRates} from "./interfaces.js"
 
-export const oneHour = 1000 * 60 * 60
+const currencyLibrary: CurrencyLibrary = defaultCurrencyLibrary
 
-export async function makeCurrencyConverter({
+export function makeCurrencyConverter({
+		currencies,
 		baseCurrency,
 		locale = locale2(),
-		currencies = defaultCurrencies,
-		persistence = {
-			storage: window.localStorage,
-			cacheLifespan: oneHour,
-			storageKeys: {
-				exchangeRatesCache: "crnc-exchange-rates-cache",
-				userDisplayCurrency: "crnc-user-display-currency",
-			},
-		},
+		persistence = defaultPersistence(),
 		downloadExchangeRates = defaultDownloadExchangeRates,
-	}: {
-		baseCurrency: string
-		locale?: string
-		currencies?: Currencies
-		persistence?: ConverterPersistence
-		downloadExchangeRates?: DownloadExchangeRates
-	}) {
+		listenForStorageChange = defaultListenForStorageChange(persistence),
+	}: ConverterParams) {
 
-	if (!isCurrencyAvailable(baseCurrency, currencies))
-		throw new Error(`baseCurrency ${baseCurrency} is not an available currency`)
+	const validated = validateConverterParams({baseCurrency, currencies, currencyLibrary})
+	currencies = validated.currencies
+	baseCurrency = validated.baseCurrency
 
 	const snap = snapstate({
-		exchangeRates: undefined as CurrencyExchangeRates,
-		currencies,
-		baseCurrency,
-		userDisplayCurrency: baseCurrency,
+		currencyPreference: baseCurrency as string,
+		exchangeRates: undefined as undefined | CurrencyExchangeRates,
 	})
 
-	snap.state.userDisplayCurrency = rememberUserDisplayCurrency({
-		locale,
-		currencies,
-		persistence,
-		fallback: baseCurrency,
-	})
+	const exchangeRatesDownload = rememberOrDownloadExchangeRates({
+			currencies,
+			persistence,
+			downloadExchangeRates,
+		})
+		.then(rates => snap.state.exchangeRates = rates)
+		.catch(() => {})
 
-	snap.state.exchangeRates = await rememberOrDownloadExchangeRates({
-		currencies,
-		persistence,
-		cacheLifespan: persistence.cacheLifespan,
-		downloadExchangeRates,
-	})
+	function getAvailableCurrencies() {
+		const {exchangeRates} = snap.state
+		return exchangeRates
+			? getDetailsForCurrencies(
+				[baseCurrency, ...Object.keys(exchangeRates)],
+				currencyLibrary
+			)
+			: getDetailsForCurrencies([baseCurrency], currencyLibrary)
+	}
+
+	function getTargetCurrency() {
+		const {currencyPreference} = snap.state
+		const preferenceIsAvailable = Object.keys(getAvailableCurrencies())
+			.indexOf(currencyPreference) !== -1
+		return preferenceIsAvailable
+			? currencyPreference
+			: baseCurrency
+	}
+
+	function updateLocalCurrencyPreference(code: string) {
+		code = code
+			? code.toUpperCase()
+			: assumeUserCurrency({
+				locale,
+				currencies,
+				currenciesByLocales,
+				fallback: baseCurrency,
+			})
+		const display = isCurrencyAllowed(code, currencies)
+			? code
+			: baseCurrency
+		snap.state.currencyPreference = display
+	}
+
+	const reloadCurrencyPreference = () => updateLocalCurrencyPreference(
+		persistence.storage.getItem(persistence.storageKeys.currencyPreference)
+	)
+
+	reloadCurrencyPreference()
+	listenForStorageChange({reloadCurrencyPreference})
 
 	return {
 
 		snap: restricted(snap),
 
-		display(valueInBaseCurrency: number, precision = 2) {
-			const {exchangeRates, baseCurrency, userDisplayCurrency} = snap.state
-			const currencyShouldBeConverted = baseCurrency !== userDisplayCurrency
-			return (currencyShouldBeConverted && exchangeRates)
+		get exchangeRatesDownload() {
+			return exchangeRatesDownload
+		},
+
+		get baseCurrency() {
+			return baseCurrency
+		},
+
+		get currencyPreference() {
+			return snap.readable.currencyPreference
+		},
+
+		get targetCurrency() {
+			return getTargetCurrency()
+		},
+
+		get availableCurrencies() {
+			return getAvailableCurrencies()
+		},
+
+		setCurrencyPreference(currency: string) {
+			currency = currency.toUpperCase()
+			updateLocalCurrencyPreference(currency)
+			persistence.storage.setItem(
+				persistence.storageKeys.currencyPreference,
+				snap.state.currencyPreference,
+			)
+		},
+
+		display(valueInBaseCurrency: number, {currency, precision = 2}: ConverterDisplayOptions = {}) {
+			const {exchangeRates} = snap.state
+
+			currency = currency
+				? Object.keys(getAvailableCurrencies()).includes(currency)
+					? currency
+					: getTargetCurrency()
+				: getTargetCurrency()
+
+			const conversionMustHappen = baseCurrency !== currency
+
+			return (conversionMustHappen && exchangeRates)
 				? convertAndFormatCurrency({
 					value: valueInBaseCurrency,
 					locale,
 					precision,
 					exchangeRates,
 					inputCurrency: baseCurrency,
-					outputCurrency: userDisplayCurrency,
+					outputCurrency: currency,
 				})
 				: formatCurrency({
 					locale,
 					precision,
-					currencies,
+					currencyLibrary,
 					code: baseCurrency,
 					value: valueInBaseCurrency,
 				})
-		},
-
-		setDisplayCurrency(code: string) {
-			const display = isCurrencyAvailable(code, currencies)
-				? code
-				: baseCurrency
-
-			persistence.storage.setItem(
-				persistence.storageKeys.userDisplayCurrency,
-				display,
-			)
-
-			snap.state.userDisplayCurrency = display
 		},
 	}
 }

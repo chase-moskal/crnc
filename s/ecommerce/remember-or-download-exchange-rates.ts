@@ -1,25 +1,53 @@
 
 import {cache} from "../toolbox/cache.js"
-import {Currencies, ConverterPersistence, DownloadExchangeRates, CurrencyCodes} from "../interfaces.js"
+import {ConverterPersistence, DownloadExchangeRates, CurrencyExchangeRates} from "../interfaces.js"
 
 export async function rememberOrDownloadExchangeRates({
 			currencies,
-			cacheLifespan,
-			persistence: {storage, storageKeys},
+			persistence: {storage, storageKeys, cacheLifespan},
 			downloadExchangeRates,
 		}: {
-		cacheLifespan?: number
-		currencies: Currencies
+		currencies: string[]
 		persistence: ConverterPersistence
 		downloadExchangeRates: DownloadExchangeRates
 	}) {
-	const currencyCodes = <CurrencyCodes>Object.keys(currencies)
+
 	const ratesCache = cache({
-		lifespan: cacheLifespan,
 		storage,
+		lifespan: cacheLifespan,
 		storageKey: storageKeys.exchangeRatesCache,
-		load: async() => downloadExchangeRates({currencyCodes}),
+		load: async() => downloadExchangeRates({currencies}),
 	})
-	const {exchangeRates} = await ratesCache.read()
+
+	let shouldDownloadFreshResults = false
+
+	let results = await ratesCache.readCache()
+	if (results)
+		shouldDownloadFreshResults = !ratesAreSufficient(results.exchangeRates, currencies)
+	else
+		shouldDownloadFreshResults = true
+
+	if (shouldDownloadFreshResults)
+		results = await ratesCache.readFresh()
+
+	const validAndSufficient = (
+		results?.exchangeRates
+		&& ratesAreSufficient(results.exchangeRates, currencies)
+	)
+
+	const exchangeRates = validAndSufficient
+		? results.exchangeRates
+		: undefined
+
 	return exchangeRates
+}
+
+function ratesAreSufficient(rates: CurrencyExchangeRates, currencies: string[]) {
+	const exchangeKeys = Object.keys(rates)
+	const currenciesMissingInRates = currencies.filter(
+		currency => exchangeKeys.indexOf(currency) === -1
+	)
+	return currenciesMissingInRates.length
+		? false
+		: true
 }

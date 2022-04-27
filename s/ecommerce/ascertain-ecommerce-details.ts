@@ -10,7 +10,7 @@ const oneHour = 1000 * 60 * 60
  *  - attempt to download rates, and upon failure, avoid currency conversions
  */
 export async function ascertainEcommerceDetails({
-	currencyCodes: currencies,
+	currencies,
 	storeBaseCurrency,
 	userDisplayCurrency,
 	cacheLifespan = oneHour,
@@ -22,7 +22,7 @@ export async function ascertainEcommerceDetails({
 		lifespan: cacheLifespan,
 		storage: cacheStorage,
 		storageKey: cacheStorageKey,
-		load: async() => downloadExchangeRates({currencyCodes: currencies}),
+		load: async() => downloadExchangeRates({currencies}),
 	})
 
 	try {

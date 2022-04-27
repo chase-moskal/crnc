@@ -1,6 +1,6 @@
 
 import {requestXml} from "../toolbox/request-xml.js"
-import {defaultCurrenciesToDownload} from "./defaults/default-currencies-to-download.js"
+import {filterOutCurrenciesNotSupportedByBankOfCanada} from "./bank-of-canada/supported-currencies.js"
 import {CurrencyExchangeRates, DownloadExchangeRatesParams, DownloadExchangeRatesResults} from "../interfaces.js"
 
 /**
@@ -8,13 +8,15 @@ import {CurrencyExchangeRates, DownloadExchangeRatesParams, DownloadExchangeRate
  * - from bank of canada valet service https://www.bankofcanada.ca/valet/docs
  */
 export async function downloadExchangeRates({
-		currencyCodes = [...defaultCurrenciesToDownload],
-	}: DownloadExchangeRatesParams = {}): Promise<DownloadExchangeRatesResults> {
+		currencies,
+	}: DownloadExchangeRatesParams): Promise<DownloadExchangeRatesResults> {
+
+	currencies = filterOutCurrenciesNotSupportedByBankOfCanada(currencies)
 
 	const canadian = "CAD"
 	const nonCanadianOnly = (currency: string) => currency !== canadian
 	const toBankOfCanadaSeries = (currency: string) => `FX${currency}${canadian}`
-	const series = currencyCodes
+	const series = currencies
 		.filter(nonCanadianOnly)
 		.map(toBankOfCanadaSeries)
 		.join(",")

@@ -28,3 +28,9 @@ export const bankOfCanadaSupportedCurrencies = <const>[
 	"USD",
 	"VND",
 ]
+
+export function filterOutCurrenciesNotSupportedByBankOfCanada(currencies: string[]) {
+	return currencies.filter(
+		currency => bankOfCanadaSupportedCurrencies.indexOf(<any>currency) !== -1
+	)
+}

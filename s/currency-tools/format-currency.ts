@@ -1,6 +1,6 @@
 
-import {currencies as defaultCurrencies} from "../ecommerce/currencies.js"
 import {FormatCurrencyParams, Money, FormattableNumber} from "../interfaces.js"
+import {currencyLibrary as defaultCurrencyLibrary} from "../ecommerce/currency-library.js"
 
 /**
  * Round a number to the desired number of decimal places
@@ -33,10 +33,10 @@ export function formatCurrency({
 	value,
 	precision = 2,
 	locale = undefined,
-	currencies = defaultCurrencies,
+	currencyLibrary = defaultCurrencyLibrary,
 }: FormatCurrencyParams): Money {
 
-	const currency = currencies[code]
+	const currency = currencyLibrary[code]
 	if (!currency)
 		throw new Error(`unknown currency code "${code}"`)
 

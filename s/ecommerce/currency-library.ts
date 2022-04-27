@@ -1,7 +1,5 @@
 
-import {Currency} from "../interfaces.js"
-
-export const currencies: {[key: string]: Currency} = {
+export const currencyLibrary = {
 	USD: {
 		code: "USD",
 		symbol: "$",
@@ -26,6 +24,11 @@ export const currencies: {[key: string]: Currency} = {
 		code: "GBP",
 		symbol: "£",
 		name: "British Pound Sterling",
+	},
+	JPY: {
+		code: "JPY",
+		symbol: "¥",
+		name: "Japanese Yen",
 	},
 	XBT: {
 		code: "XBT",
