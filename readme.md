@@ -3,56 +3,45 @@
 
 # ⁓ ***crnc*** ⁓
 
-*currency conversions and formatting for the web.*  
-*crnc helps you display prices to users, in their favorite currency.*  
+*currency conversions and formatting library for the web.*  
 
-## 📦 **`npm install crnc`**
-
-🕹️ [**live online demo of crnc**](https://crnc.chasemoskal.com/)  
-🖊️ [codepen example html install](https://codepen.io/ChaseMoskal/pen/YzYmKLv)  
-
-🎁 web component for displaying prices to users  
-🌎 formats prices in accordance to browser locale  
-👤 user can switch their own currency preference  
-⏬ exchange rates are downloaded from the [bank of canada](https://www.bankofcanada.ca/valet/docs)  
-🛒 used by [shopper](https://github.com/chase-moskal/shopper#readme) for displaying store prices  
-
+💰 display prices to users on your websites  
+🌎 ui for users to switch their preferred viewing currency  
 🔌 easy html install (universal web components)  
-📜 typescript library for web browsers  
-🧬 functions for advanced integrations  
-💾 exchange rates are cached for an hour by default  
-💴 initially assumes user currency preference based on locale  
+⏬ exchange rates are downloaded from the [bank of canada](https://www.bankofcanada.ca/valet/docs)  
+🧬 if you don't need the ui, just use the core functions directly  
+🛒 used by [shopper](https://github.com/chase-moskal/shopper#readme) for displaying store prices  
 💖 free and open source, just for you  
 
 <br/>
+
+### 🚀 [**see the crnc live demo**](https://crnc.chasemoskal.com/)  
+
+🕹️ [also the codepen html example](https://codepen.io/ChaseMoskal/pen/YzYmKLv)  
+
+![crnc example](./crnc-example.webp)
+
+<br/>
 <br/>
 
-## 🔌 easy html install
+## 💡 `<crnc-price>` html component
 
-1. insert this html code into your page's `<head>`
-    ```html
-    <script type=importmap-shim>{"imports":{"crnc":"https://unpkg.com/crnc@0.0/x/crnc.js","crnc/":"https://unpkg.com/crnc@0.0/"}}</script>
-    <script type=importmap-shim src="https://unpkg.com/crnc@0.0/x/importmap-cloud.json"></script>
-    <script defer type=module-shim src="https://unpkg.com/crnc@0.0/x/html-install.js"></script>
-    <script defer src="https://unpkg.com/es-module-shims@1.5/dist/es-module-shims.js"></script>
-    ```
+using crnc is easy.  
+just sprinkle the `<crnc-price>` element in your html, wherever you need to display a price.  
 
-1. insert this *crnc* configuration snippet into your page's `<head>`
-    ```html
-    <crnc-config
-      base-currency="usd"
-      currencies="cad aud eur gbp jpy"
-    ></crnc-config>
-    ```
-    you can change these values.
-    - `base-currency` is the currency that your store users for all its pricing.
-    - `currencies` are the other currencies you want to allow conversions for.
+```html
+<!-- a basic example -->
+<crnc-price value="9.99"></crnc-price>
 
-1. use the `<crnc-price>` element anywhere in your page's `<body>`
-    ```html
-    <crnc-price value="1234.56"></crnc-price>
-    ```
-    - if you're canadian, you may see a result like `$1,579.87 CAD*`
+<!-- put it wherever you want -->
+<div>
+  <p>My Cool Product!</p>
+  <crnc-price value="1234.56"></crnc-price>
+</div>
+
+<!-- here's a price that's on sale! -->
+<crnc-price value="9.99" comparison="15.99"></crnc-price>
+```
 
 ### parameters for the `<crnc-price>` component
 
@@ -93,6 +82,89 @@
   ```html
   <crnc-price value="1234.56" right></crnc-price>
   ```
+
+<br/>
+<br/>
+
+## ⚡ quick html install
+
+1. paste this html code into your page's `<head>`
+    ```html
+    <script type=importmap-shim>{"imports":{"crnc":"https://unpkg.com/crnc@0.0/x/crnc.js","crnc/":"https://unpkg.com/crnc@0.0/"}}</script>
+    <script type=importmap-shim src="https://unpkg.com/crnc@0.0/x/importmap-cloud.json"></script>
+    <script defer type=module-shim src="https://unpkg.com/crnc@0.0/x/html-install.js"></script>
+    <script defer src="https://unpkg.com/es-module-shims@1.5/dist/es-module-shims.js"></script>
+    ```
+
+1. paste this configuration snippet into your page's `<head>`
+    ```html
+    <crnc-config
+      base-currency="usd"
+      currencies="cad aud eur gbp jpy"
+    ></crnc-config>
+    ```
+    you can change these values.
+    - `base-currency` is the currency that your store users for all its pricing.
+    - `currencies` are the other currencies you want to allow conversions for.
+
+1. use the `<crnc-price>` element anywhere in your page's `<body>`
+    ```html
+    <crnc-price value="1234.56"></crnc-price>
+    ```
+    - if you're canadian, you may see a result like `$1,579.87 CAD*`
+
+- this installation technique uses [es-module-shims](https://github.com/guybedford/es-module-shims)
+
+<br/>
+<br/>
+
+## 📦 `npm install crnc`
+
+for these techniques, you'll need some experience with web development tools like npm.
+
+### simple local installation with npm:
+
+1. `npm install crnc`
+1. in your main javascript, import the crnc html installer
+    ```js
+    import "crnc/x/html-install.js"
+    ```
+1. add a crnc config element to your page's `<head>`
+    ```html
+    <crnc-config
+      base-currency="usd"
+      currencies="cad aud eur gbp jpy"
+    ></crnc-config>
+    ```
+1. go wild using `<crnc-price>` components throughout your app.
+    ```html
+    <crnc-price value="1234.56"></crnc-price>
+    ```
+
+### custom integration:
+1. `npm install crnc`
+1. in your main javascript, you can setup crnc manually
+    ```js
+    import * as crnc from "crnc"
+
+    // currency converter downloads rates, persists currency preference,
+    // and of course, converts and formats money.
+    const currencyConverter = crnc.makeCurrencyConverter({
+      baseCurrency: "usd",
+      currencies: "cad eur gbp aud jpy",
+    })
+
+    // this is an object of web components.
+    const components = crnc.prepareComponents({currencyConverter})
+
+    // you are responsible to register the components to the dom
+    // yourself.
+    // this gives you the ability to rename components,
+    // or extend them however you need.
+    crnc.registerComponents(components)
+    ```
+1. go wild using `<crnc-price>` components throughout your app.
+- note: there is no need for a `<crnc-config>` element in this kind of installation.
 
 <br/>
 <br/>
@@ -337,7 +409,7 @@
 <br/>
 <br/>
 
-## 🛠️ handy functions for custom integrations
+## 🛠️ core functions for custom integrations
 
 ### currency tools
 
