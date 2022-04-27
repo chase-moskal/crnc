@@ -49,10 +49,10 @@
 	</style>
 
 	<script defer type=importmap-shim src="./x/importmap.json"></script>
-	<script defer type=module-shim src="./x/html-integration.js"></script>
+	<script defer type=module-shim src="./x/html-install.js"></script>
 	<script defer src="/node_modules/es-module-shims/dist/es-module-shims.js"></script>
 
-	<crnc-config base-currency="usd" currencies="cad,eur,gbp"></crnc-config>
+	<crnc-config base-currency="usd" currencies="cad eur gbp"></crnc-config>
 </head>
 <body>
 	<main>
@@ -61,7 +61,8 @@
 			<span>currency conversions and formatting for the web</span>
 		</h1>
 
-		<crnc-price value="1234.56">LOLOLOLOLOLOLOLOL</crnc-price>
+		<crnc-price value="1234.56"></crnc-price>
+		<crnc-price value="1234.56" comparison="1358.016"></crnc-price>
 		<crnc-price value="9.99"></crnc-price>
 		<crnc-price value="6543.21" currency="EUR" precision="0"></crnc-price>
 

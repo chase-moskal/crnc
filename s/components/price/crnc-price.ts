@@ -27,16 +27,16 @@ export class CrncPrice extends mixinRequireContext<PriceContext>()(Component) {
 	precision: number
 
 	@property({type: Number, reflect: true})
-	comparedValue: number
+	comparison: number
 
 	@property({type: Boolean, reflect: true})
 	right: boolean = false
 
 	@property({type: Boolean, reflect: true})
-	"menu-open": boolean
+	"menu-is-open": boolean
 
 	#toggleMenu = () => {
-		this["menu-open"] = !this["menu-open"]
+		this["menu-is-open"] = !this["menu-is-open"]
 	}
 
 	#prepareMenuClickHandler = (currency: string) => () => {
@@ -53,16 +53,21 @@ export class CrncPrice extends mixinRequireContext<PriceContext>()(Component) {
 
 	#renderValidPrice(value: number) {
 		const {currencyConverter} = this.context
-		const {currency, precision, comparedValue, "menu-open": menuOpen} = this
 		const {baseCurrency, availableCurrencies} = currencyConverter
+		const {
+			currency,
+			precision,
+			comparison,
+			"menu-is-open": menuIsOpen,
+		} = this
 
 		const money = currencyConverter.display(value, {currency, precision})
 
 		const currencyIsConverted = money.currency.code !== baseCurrency
 		const conversionMark = currencyIsConverted ?"*" :""
 
-		const comparedMoney = comparedValue
-			? currencyConverter.display(comparedValue, {currency, precision})
+		const comparedMoney = comparison
+			? currencyConverter.display(comparison, {currency, precision})
 			: undefined
 
 		const menuIsAllowed = !currency
@@ -70,6 +75,10 @@ export class CrncPrice extends mixinRequireContext<PriceContext>()(Component) {
 		const codeButtonClick = menuIsAllowed
 			? this.#toggleMenu
 			: () => {}
+
+		const showComparison = comparedMoney
+			? comparedMoney.value > money.value
+			: false
 
 		return html`
 			<div class="price-display" ?data-menu-is-allowed=${menuIsAllowed}>
@@ -83,7 +92,7 @@ export class CrncPrice extends mixinRequireContext<PriceContext>()(Component) {
 						currencyIsConverted,
 						codeButtonClick,
 					})}
-					${menuOpen ? html`
+					${menuIsOpen ? html`
 						<div class="blanket" @click=${this.#toggleMenu}></div>
 						<ul class="menu">
 							${Object.values(availableCurrencies).map(({symbol, code, name}) => html`
@@ -104,7 +113,7 @@ export class CrncPrice extends mixinRequireContext<PriceContext>()(Component) {
 						</ul>
 					` : html``}
 				</div>
-				${comparedMoney ? html`
+				${showComparison ? html`
 					<div class="discount-area">
 						<span class="compared">
 							<span class="symbol">${comparedMoney.currency.symbol}</span

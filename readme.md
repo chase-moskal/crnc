@@ -1,20 +1,92 @@
 
+<br/>
+
 # ⁓ ***crnc*** ⁓
 
-*crnc helps you display prices to users on the web.*
+*currency conversions and formatting for the web.*  
+*crnc helps you display prices to users.*  
 
 ## 📦 **`npm install crnc`**
 
-💵 currency conversions and formatting library  
 📜 typescript library for web browsers  
-🔌 web components for easy drop-in html-only integrations  
-🧬 functions exposed for advanced integrations  
+🔌 easy html install (universal web components)  
+🧬 functions for advanced integrations  
 🛒 used by [shopper](https://github.com/chase-moskal/shopper#readme) for displaying prices  
-⏬ downloads exchange rates from the [bank of canada](https://www.bankofcanada.ca/valet/docs)  
+👤 user can switch their own currency preference  
+⏬ exchange rates are downloaded from the [bank of canada](https://www.bankofcanada.ca/valet/docs)  
 💾 rates are cached for an hour by default  
 🌎 formats numbers in accordance to browser locale  
-💴 assumes user's currency preference based on locale  
+💴 initially assumes user's currency preference based on locale  
 💖 free and open source, just for you  
+
+<br/>
+<br/>
+
+## 🔌 easy html install
+
+1. insert this html code into your document's `<head>`
+    ```html
+    <script defer type=importmap-shim src="https://unpkg.com/crnc@0.0/x/importmap-unpkg.json"></script>
+    <script defer type=module-shim src="https://unpkg.com/crnc@0.0/x/html-install.js"></script>
+    <script defer src="https://unpkg.com/es-module-shims@1.5/dist/es-module-shims.js"></script>
+    ```
+
+1. insert this *crnc* configuration snippet into your document's `<head>`
+    ```html
+    <crnc-config
+      base-currency="usd"
+      currencies="cad aud eur gbp"
+    ></crnc-config>
+    ```
+    you can change these values.
+    - `base-currency` is the currency that your store users for all its pricing.
+    - `currencies` are the other currencies you want to allow conversions for.
+
+1. use the `<crnc-price>` element anywhere in your document's `<body>`
+    ```html
+    <crnc-price value="1234.56"></crnc-price>
+    ```
+    - if you're canadian, you may see a result like `$1,579.87 CAD*`
+
+### parameters for the `<crnc-price>` component
+
+- **`value="1234.56"`** *number*  
+  the amount of money, in your *base-currency*, for this price.  
+  ```html
+  <crnc-price value="1234.56"></crnc-price>
+  ```
+
+- **`currency="eur"`** ***(optional)*** *currency code string*  
+  override the user's currency preference, and demand that this price be shown in the specific currency.  
+  however, if the currency is not available (maybe the exchange rates download failed), the *base-currency* will be used instead.  
+  ```html
+  <crnc-price value="1234.56" currency="eur"></crnc-price>
+  ```
+
+- **`precision="2"`** ***(optional)*** *number*  
+  specify how many decimal digits to display.  
+  if set to `0`, it will round the price to the nearest whole number.  
+  defaults to `2`.  
+  ```html
+  <crnc-price value="1234.56" precision="0"></crnc-price>
+  ```
+
+- **`comparison="1358.016"`** ***(optional)*** *number*  
+  put something on sale!  
+  when you provide `comparison`, it represents the "regular" price, and `value` then represents the current sale price.  
+  the sale percentage is calculated automatically,  
+  something like *( $1234.56 — ~~1358.02~~ — 10% off )* is displayed to the user  
+  ```html
+  <crnc-price value="1234.56" comparison="1358.016"></crnc-price>
+  ```
+
+- **`right`** ***(optional)*** *boolean*  
+  sets the currency preference selector menu to the right side.  
+  this is better for prices that are on the right side of the viewport,  
+  to avoid the menu from clipping out of the viewport.  
+  ```html
+  <crnc-price value="1234.56" right></crnc-price>
+  ```
 
 <br/>
 <br/>
@@ -29,7 +101,7 @@
 <br/>
 <br/>
 
-## 💱 currency converter
+## 💱 currency converter javascript usage
 
 - we use the currency converter to convert and format prices according to the user's locale and currency preference.
 - the currency converter assumes you're running an ecommerce situation where all your prices are share a single `baseCurrency`.
@@ -259,7 +331,7 @@
 <br/>
 <br/>
 
-## 🛠️ handy functions for currency conversions and formatting
+## 🛠️ handy functions for custom integrations
 
 ### currency tools
 
