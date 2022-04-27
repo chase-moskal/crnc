@@ -120,7 +120,12 @@ export function makeCurrencyConverter({
 		display(valueInBaseCurrency: number, {currency, precision = 2}: ConverterDisplayOptions = {}) {
 			const {exchangeRates} = snap.state
 
-			currency ??= getTargetCurrency()
+			currency = currency
+				? Object.keys(getAvailableCurrencies()).includes(currency)
+					? currency
+					: getTargetCurrency()
+				: getTargetCurrency()
+
 			const conversionMustHappen = baseCurrency !== currency
 
 			return (conversionMustHappen && exchangeRates)
