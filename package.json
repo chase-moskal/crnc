@@ -13,7 +13,7 @@
 		"build": "run-s clean && run-p compile importly && run-s test",
 		"clean": "rimraf x && mkdirp x",
 		"compile": "tsc",
-		"importly": "importly < package-lock.json > x/importmap.json",
+		"importly": "importly < package-lock.json > x/importmap.json && importly --host=unpkg < package-lock.json > x/importmap-cloud.json",
 		"watch": "tsc -w",
 		"start": "http-server",
 		"test": "cynic node x/tests.test.js"

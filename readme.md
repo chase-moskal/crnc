@@ -30,7 +30,8 @@
 
 1. insert this html code into your page's `<head>`
     ```html
-    <script defer type=importmap-shim src="https://unpkg.com/crnc@0.0/x/importmap-unpkg.json"></script>
+    <script type=importmap-shim>{"imports":{"crnc/":"https://unpkg.com/crnc@0.0/"}}</script>
+    <script type=importmap-shim src="https://unpkg.com/crnc@0.0/x/importmap-cloud.json"></script>
     <script defer type=module-shim src="https://unpkg.com/crnc@0.0/x/html-install.js"></script>
     <script defer src="https://unpkg.com/es-module-shims@1.5/dist/es-module-shims.js"></script>
     ```
