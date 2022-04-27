@@ -48,12 +48,15 @@ button {
 .code {
 	padding: 0.1em;
 	display: inline-block;
-	cursor: pointer;
 	border: 1px solid transparent;
 	border-radius: 3px;
 }
 
-.code:hover {
+.price-display[data-menu-is-allowed] .code {
+	cursor: pointer;
+}
+
+.price-display[data-menu-is-allowed] .code:hover {
 	border: var(
 		--price-display-code-hover-border,
 		1px solid rgba(128,128,128, 0.5)

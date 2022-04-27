@@ -51,25 +51,35 @@ export class CrncPrice extends mixinRequireContext<PriceContext>()(Component) {
 	#renderValidPrice(value: number) {
 		const {currencyConverter} = this.context
 		const {currency, precision, comparedValue, "menu-open": menuOpen} = this
-		const {targetCurrency, baseCurrency, availableCurrencies} = currencyConverter
-
-		const currencyIsConverted = targetCurrency !== baseCurrency
-		const conversionMark = currencyIsConverted ?"*" :""
+		const {baseCurrency, availableCurrencies} = currencyConverter
 
 		const money = currencyConverter.display(value, {currency, precision})
+
+		const currencyIsConverted = money.currency.code !== baseCurrency
+		const conversionMark = currencyIsConverted ?"*" :""
 
 		const comparedMoney = comparedValue
 			? currencyConverter.display(comparedValue, {currency, precision})
 			: undefined
 
+		const menuIsAllowed = !currency
+
+		const codeButtonClick = menuIsAllowed
+			? this.#toggleMenu
+			: () => {}
+
 		return html`
-			<div class="price-display">
+			<div class="price-display" ?data-menu-is-allowed=${menuIsAllowed}>
 				<div class="price-area">
 					<span class="symbol">${money.currency.symbol}</span
 					><span class="amount">${money.amount}</span>
-					<button class="code" @click=${this.#toggleMenu}>
-						${money.currency.code}${conversionMark}<span class="down">▼</span>
-					</button>
+					${this.#renderCurrencyCode({
+						currencyCode: money.currency.code,
+						menuIsAllowed,
+						conversionMark,
+						currencyIsConverted,
+						codeButtonClick,
+					})}
 					${menuOpen ? html`
 						<div class="blanket" @click=${this.#toggleMenu}></div>
 						<ul class="menu">
@@ -109,9 +119,41 @@ export class CrncPrice extends mixinRequireContext<PriceContext>()(Component) {
 		`
 	}
 
+	#renderCurrencyCode({
+			currencyCode, conversionMark, menuIsAllowed, currencyIsConverted,
+			codeButtonClick,
+		}: {
+			currencyCode: string
+			conversionMark: string
+			menuIsAllowed: boolean
+			currencyIsConverted: boolean
+			codeButtonClick: () => void
+		}) {
+
+		const codeButtonTitle = currencyIsConverted
+			? "estimated currency conversion"
+			: ""
+
+		const downSymbol = menuIsAllowed
+			? html`<span class="down">▼</span>`
+			: null
+
+		return menuIsAllowed
+			? html`
+				<button class="code" @click=${codeButtonClick} title=${codeButtonTitle}>
+					${currencyCode}${conversionMark}${downSymbol}
+				</button>
+			`
+			: html`
+				<span class="code" @click=${codeButtonClick} title=${codeButtonTitle}>
+					${currencyCode}${conversionMark}${downSymbol}
+				</span>
+			`
+	}
+
 	#renderNoValue() {
 		return html`
-			no value found
+			--
 		`
 	}
 }

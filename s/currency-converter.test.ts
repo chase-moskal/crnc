@@ -346,6 +346,19 @@ export default <Suite>{
 			await converter.exchangeRatesDownload
 			expect(converter.targetCurrency).equals(converter.baseCurrency)
 		},
+		async "specifying to display an unavailable currency, falls back on baseCurrency"() {
+			const converter = makeCurrencyConverter({
+				locale,
+				baseCurrency: "USD",
+				currencies: ["USD", "CAD"],
+				persistence: mockPersistence.standard(),
+				listenForStorageChange,
+				downloadExchangeRates: mockExchangeRateDownloaders.success(),
+			})
+			await converter.exchangeRatesDownload
+			const money = converter.display(1234.56, {currency: "ROFL"})
+			expect(money.currency.code).equals(converter.baseCurrency)
+		},
 
 	},
 	"fail hard": {
