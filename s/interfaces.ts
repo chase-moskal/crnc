@@ -1,5 +1,6 @@
 
-import {makeCurrencyConverter} from "./currency-converter.js"
+import {RestrictedSnapstate} from "@chasemoskal/snapstate"
+
 import {currencyLibrary} from "./ecommerce/currency-library.js"
 import {bankOfCanadaSupportedCurrencies} from "./currency-tools/bank-of-canada/supported-currencies.js"
 
@@ -130,4 +131,19 @@ export interface ConverterDisplayOptions {
 	precision?: number
 }
 
-export type CurrencyConverter = ReturnType<typeof makeCurrencyConverter>
+export interface CurrencyConverter {
+	snap: RestrictedSnapstate<{
+		currencyPreference: string
+		exchangeRates: CurrencyExchangeRates
+	}>
+	readonly exchangeRatesDownload: Promise<void | CurrencyExchangeRates>
+	readonly baseCurrency: string
+	readonly currencyPreference: string
+	readonly targetCurrency: string
+	readonly availableCurrencies: CurrencyLibrary
+	setCurrencyPreference(currency: string): void
+	display(
+		valueInBaseCurrency: number,
+		options?: ConverterDisplayOptions,
+	): Money
+}

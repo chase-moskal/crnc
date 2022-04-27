@@ -1,5 +1,5 @@
 
-import {LitElement, CSSResultGroup} from "lit"
+import {LitElement, CSSResultGroup, css} from "lit"
 import {Constructor} from "../component-types.js"
 
 function arrayize<T>(item: T | T[]) {

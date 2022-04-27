@@ -10,9 +10,11 @@ export function prepareComponents({currencyConverter}: {
 		currencyConverter: CurrencyConverter
 	}) {
 
-	return themeComponents(themeCss, {
+	const components = themeComponents(themeCss, {
 		CrncPrice: mixinSnapstateSubscriptions(currencyConverter.snap.subscribe)(
 			CrncPrice.withContext({currencyConverter})
 		),
 	})
+
+	return components
 }

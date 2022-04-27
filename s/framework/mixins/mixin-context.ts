@@ -21,14 +21,9 @@ export function mixinContext<xContext>(providedContext: xContext) {
 export function mixinRequireContext<xContext>(name?: string) {
 	return function<C extends Constructor>(
 			Base: C
-		): Mixin<C, WithContext<xContext>> & {withContext(context: xContext): Mixin<C, WithContext<xContext>>} {
+		): Mixin<C, WithContext<xContext>> {
 
 		return <any>class extends Base {
-
-			static withContext(context: xContext) {
-				return mixinContext<xContext>(context)(this)
-			}
-
 			get context(): xContext {
 				throw new Error(`context required by component${name ? " " + name : ""}`)
 			}

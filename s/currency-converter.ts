@@ -12,8 +12,8 @@ import {convertAndFormatCurrency} from "./currency-tools/convert-and-format-curr
 import {currencyLibrary as defaultCurrencyLibrary} from "./ecommerce/currency-library.js"
 import {rememberOrDownloadExchangeRates} from "./ecommerce/remember-or-download-exchange-rates.js"
 import {defaultListenForStorageChange, defaultPersistence} from "./ecommerce/currency-converter-defaults.js"
-import {ConverterDisplayOptions, ConverterParams, CurrencyExchangeRates, CurrencyLibrary} from "./interfaces.js"
 import {downloadExchangeRates as defaultDownloadExchangeRates} from "./currency-tools/download-exchange-rates.js"
+import {ConverterDisplayOptions, ConverterParams, CurrencyConverter, CurrencyExchangeRates, CurrencyLibrary} from "./interfaces.js"
 
 const currencyLibrary: CurrencyLibrary = defaultCurrencyLibrary
 
@@ -24,7 +24,7 @@ export function makeCurrencyConverter({
 		persistence = defaultPersistence(),
 		downloadExchangeRates = defaultDownloadExchangeRates,
 		listenForStorageChange = defaultListenForStorageChange(persistence),
-	}: ConverterParams) {
+	}: ConverterParams): CurrencyConverter {
 
 	const validated = validateConverterParams({baseCurrency, currencies, currencyLibrary})
 	currencies = validated.currencies

@@ -9,6 +9,7 @@
 		"x",
 		"s"
 	],
+	"main": "x/crnc.js",
 	"scripts": {
 		"build": "run-s clean && run-p compile importly && run-s test",
 		"clean": "rimraf x && mkdirp x",
