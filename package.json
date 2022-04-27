@@ -10,20 +10,13 @@
 		"s"
 	],
 	"scripts": {
-		"prepare": "run-s clean && run-p compile && run-s test",
+		"build": "run-s clean && run-p compile importly && run-s test",
 		"clean": "rimraf x && mkdirp x",
 		"compile": "tsc",
+		"importly": "importly < package-lock.json > x/importmap.json",
 		"watch": "tsc -w",
-		"start": "serve",
+		"start": "http-server",
 		"test": "cynic node x/tests.test.js"
-	},
-	"devDependencies": {
-		"cynic": "0.1.0-dev.16",
-		"mkdirp": "^1.0.4",
-		"npm-run-all": "^4.1.5",
-		"rimraf": "^3.0.2",
-		"serve": "^13.0.2",
-		"typescript": "^4.6.3"
 	},
 	"keywords": [
 		"money",
@@ -35,6 +28,16 @@
 	],
 	"dependencies": {
 		"@chasemoskal/snapstate": "^0.0.8",
+		"es-module-shims": "^1.5.4",
 		"lit": "^2.2.2"
+	},
+	"devDependencies": {
+		"cynic": "0.1.0-dev.16",
+		"http-server": "^14.1.0",
+		"importly": "^0.2.0",
+		"mkdirp": "^1.0.4",
+		"npm-run-all": "^4.1.5",
+		"rimraf": "^3.0.2",
+		"typescript": "^4.6.3"
 	}
 }
