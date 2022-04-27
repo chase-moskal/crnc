@@ -82,6 +82,7 @@ button {
 	white-space: normal;
 }
 
+/* disable the triangle nub
 .menu::before {
 	position: absolute;
 	content: "";
@@ -95,15 +96,11 @@ button {
 	right: 0;
 	margin: auto;
 }
+*/
 
 :host([right]) .menu {
 	left: unset;
 	right: 0;
-}
-
-:host([right]) .menu::before {
-	left: unset;
-	right: var(--price-display-menu-border-radius, 5px);
 }
 
 .menu > li > button {
