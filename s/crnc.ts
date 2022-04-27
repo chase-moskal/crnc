@@ -13,3 +13,5 @@ export * from "./ecommerce/parse-config.js"
 export * from "./ecommerce/currency-library.js"
 export * from "./ecommerce/assume-user-currency.js"
 export * from "./ecommerce/currencies-by-locales.js"
+
+export * from "./framework/utils/register-components.js"
