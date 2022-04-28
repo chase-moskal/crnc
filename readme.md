@@ -91,11 +91,21 @@ just sprinkle the `<crnc-price>` element in your html, wherever you need to disp
 
 1. paste this html code into your page's `<head>`
     ```html
-    <script type=importmap-shim>{"imports":{"crnc":"https://unpkg.com/crnc@0.0/x/crnc.js","crnc/":"https://unpkg.com/crnc@0.0/"}}</script>
+    <script type=importmap-shim>
+      {"imports": {
+        "crnc/":"https://unpkg.com/crnc@0.0/",
+        "crnc":"https://unpkg.com/crnc@0.0/x/crnc.js"
+      }}
+    </script>
     <script type=importmap-shim src="https://unpkg.com/crnc@0.0/x/importmap-cloud.json"></script>
-    <script defer type=module-shim src="https://unpkg.com/crnc@0.0/x/html-install.js"></script>
+    <script defer type=module-shim>
+      import "crnc/x/html-install.js"
+    </script>
+
     <script defer src="https://unpkg.com/es-module-shims@1.5/dist/es-module-shims.js"></script>
     ```
+
+    note: this installation technique uses [es-module-shims](https://github.com/guybedford/es-module-shims), and if you're using multiple plugins that use es-module-shims, just don't repeat the last line (only one script for es-module-shims per page).
 
 1. paste this configuration snippet into your page's `<head>`
     ```html
@@ -113,8 +123,6 @@ just sprinkle the `<crnc-price>` element in your html, wherever you need to disp
     <crnc-price value="1234.56"></crnc-price>
     ```
     - if you're canadian, you may see a result like `$1,579.87 CAD*`
-
-- this installation technique uses [es-module-shims](https://github.com/guybedford/es-module-shims)
 
 <br/>
 <br/>
