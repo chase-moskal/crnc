@@ -2,7 +2,7 @@
 	"name": "crnc",
 	"version": "0.0.3",
 	"description": "currency conversion and functionality for the web",
-	"license": "ISC",
+	"license": "MIT",
 	"type": "module",
 	"author": "Chase Moskal <chasemoskal@gmail.com>",
 	"files": [
