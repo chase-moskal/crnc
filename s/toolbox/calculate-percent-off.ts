@@ -7,8 +7,8 @@ export function calculatePercentOff({
 		comparisonValue: number
 	}) {
 
-	const fraction = comparisonValue / currentValue
-	const difference = 1.0 - fraction
-	const percentage = -Math.round(difference * 100)
+	const difference = comparisonValue - currentValue
+	const fraction = difference / comparisonValue
+	const percentage = Math.round(fraction * 100)
 	return percentage
 }
