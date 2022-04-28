@@ -74,7 +74,11 @@ export class CrncPrice extends mixinRequireContext<PriceContext>()(Component) {
 			? currencyConverter.display(comparison, {currency, precision})
 			: undefined
 
-		const menuIsAllowed = !currency
+		const isOnlyBaseCurrency = Object.keys(
+			currencyConverter.availableCurrencies
+		).length === 1
+
+		const menuIsAllowed = !(isOnlyBaseCurrency || currency)
 
 		const codeButtonClick = menuIsAllowed
 			? this.#toggleMenu
@@ -150,19 +154,15 @@ export class CrncPrice extends mixinRequireContext<PriceContext>()(Component) {
 			? "estimated currency conversion"
 			: ""
 
-		const downSymbol = menuIsAllowed
-			? html`<span class="down">▼</span>`
-			: null
-
 		return menuIsAllowed
 			? html`
 				<button class="code" @click=${codeButtonClick} title=${codeButtonTitle}>
-					${currencyCode}${conversionMark}${downSymbol}
+					${currencyCode}${conversionMark}<span class="down">▼</span>
 				</button>
 			`
 			: html`
 				<span class="code" @click=${codeButtonClick} title=${codeButtonTitle}>
-					${currencyCode}${conversionMark}${downSymbol}
+					${currencyCode}${conversionMark}
 				</span>
 			`
 	}

@@ -74,6 +74,19 @@ export default <Suite>{
 			})
 			expect(converter.currencyPreference).equals("GBP")
 		},
+		async "don't bother downloading rates when it's just the baseCurrency"() {
+			const downloadCounter = mockExchangeRateDownloaders.downloadCounter()
+			const converter = makeCurrencyConverter({
+				locale,
+				currencies: ["USD"],
+				baseCurrency: "USD",
+				persistence: mockPersistence.standard(),
+				listenForStorageChange,
+				downloadExchangeRates: downloadCounter.download,
+			})
+			await converter.exchangeRatesDownload
+			expect(downloadCounter.count).equals(0)
+		},
 
 	},
 	"persistence": {
@@ -219,6 +232,62 @@ export default <Suite>{
 				expect(result.value).equals(1.5)
 			}
 			expect(downloadCounter.count).equals(2)
+		},
+		async "cached exchange rates with too many currencies are trimmed down"() {
+			const persistence = mockPersistence.standard()
+			{
+				const converter1 = makeCurrencyConverter({
+					locale,
+					baseCurrency: "USD",
+					currencies: ["CAD", "AUD", "GBP", "EUR", "JPY"],
+					persistence,
+					listenForStorageChange,
+					downloadExchangeRates: mockExchangeRateDownloaders.success(),
+				})
+				await converter1.exchangeRatesDownload
+				expect(Object.keys(converter1.availableCurrencies).length).equals(6)
+			}
+			{
+				const converter2 = makeCurrencyConverter({
+					locale,
+					baseCurrency: "USD",
+					currencies: ["CAD"],
+					persistence,
+					listenForStorageChange,
+					downloadExchangeRates: mockExchangeRateDownloaders.success(),
+				})
+				await converter2.exchangeRatesDownload
+				expect(Object.keys(converter2.availableCurrencies).length).equals(2)
+			}
+		},
+		async "cached exchange rates that are insufficient, are ignored, and a new download happens"() {
+			const persistence = mockPersistence.standard()
+			{
+				const converter1 = makeCurrencyConverter({
+					locale,
+					baseCurrency: "USD",
+					currencies: ["CAD"],
+					persistence,
+					listenForStorageChange,
+					downloadExchangeRates: mockExchangeRateDownloaders.success(),
+				})
+				await converter1.exchangeRatesDownload
+				expect(Object.keys(converter1.availableCurrencies).length).equals(2)
+			}
+			{
+				const downloadCounter = mockExchangeRateDownloaders.downloadCounter()
+				const converter2 = makeCurrencyConverter({
+					locale,
+					baseCurrency: "USD",
+					currencies: ["CAD", "AUD", "GBP", "EUR", "JPY"],
+					persistence,
+					listenForStorageChange,
+					downloadExchangeRates: downloadCounter.download,
+				})
+				await converter2.exchangeRatesDownload
+				expect(downloadCounter.count).equals(1)
+				expect(Object.keys(converter2.availableCurrencies).length).equals(6)
+			}
 		},
 
 	},

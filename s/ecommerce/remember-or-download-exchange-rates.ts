@@ -1,6 +1,6 @@
 
 import {cache} from "../toolbox/cache.js"
-import {ConverterPersistence, DownloadExchangeRates, CurrencyExchangeRates} from "../interfaces.js"
+import {ConverterPersistence, DownloadExchangeRates, CurrencyExchangeRates, DownloadExchangeRatesResults} from "../interfaces.js"
 
 export async function rememberOrDownloadExchangeRates({
 			currencies,
@@ -19,13 +19,11 @@ export async function rememberOrDownloadExchangeRates({
 		load: async() => downloadExchangeRates({currencies}),
 	})
 
-	let shouldDownloadFreshResults = false
-
 	let results = await ratesCache.readCache()
-	if (results)
-		shouldDownloadFreshResults = !ratesAreSufficient(results.exchangeRates, currencies)
-	else
-		shouldDownloadFreshResults = true
+
+	const shouldDownloadFreshResults = results
+		? !ratesAreSufficient(results.exchangeRates, currencies)
+		: true
 
 	if (shouldDownloadFreshResults)
 		results = await ratesCache.readFresh()
@@ -36,7 +34,7 @@ export async function rememberOrDownloadExchangeRates({
 	)
 
 	const exchangeRates = validAndSufficient
-		? results.exchangeRates
+		? trimOffIrrelevantRates(results.exchangeRates, currencies)
 		: undefined
 
 	return exchangeRates
@@ -50,4 +48,13 @@ function ratesAreSufficient(rates: CurrencyExchangeRates, currencies: string[]) 
 	return currenciesMissingInRates.length
 		? false
 		: true
+}
+
+function trimOffIrrelevantRates(rates: CurrencyExchangeRates, currencies: string[]) {
+	const relevant: CurrencyExchangeRates = {}
+
+	for (const code of currencies)
+		relevant[code] = rates[code]
+
+	return relevant
 }

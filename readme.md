@@ -76,7 +76,7 @@ just sprinkle the `<crnc-price>` element in your html, wherever you need to disp
   ```
 
 - **`right`** ***(optional)*** *boolean*  
-  sets the currency preference selector menu to the right side.  
+  sets the currency menu to the right side.  
   this is better for prices that are on the right side of the viewport,  
   to avoid the menu from clipping out of the viewport.  
   ```html
@@ -318,8 +318,9 @@ for these techniques, you'll need some experience with web development tools lik
 - **`baseCurrency`** *string*  
   the native currency used by your ecommerce store. using the currency converter, you will *input* all money numbers in this base currency.
 
-- **`currencies`** *array of strings*  
-  the array of currencies you want available for conversions. only these currencies will be requested for, when downloading exchange rates.
+- **`currencies`** ***(optional)*** *array of strings*  
+  the array of currencies you want available for conversions. only these currencies will be requested for, when downloading exchange rates.  
+  *(default: string containing only the base currency, no rates are downloaded in this case)*
 
 - **`locale`** ***(optional)*** *string*  
   the locale string for formatting numbers, and also for guessing the currency preference. *(default: auto-detected from browser)*

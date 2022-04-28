@@ -118,8 +118,8 @@ export interface ListenForStorageChange {
 }
 
 export interface ConverterParams {
-	currencies: string[]
 	baseCurrency: string
+	currencies?: string[]
 	locale?: string
 	persistence?: ConverterPersistence
 	downloadExchangeRates?: DownloadExchangeRates

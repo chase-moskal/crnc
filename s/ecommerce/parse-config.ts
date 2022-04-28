@@ -5,7 +5,7 @@ export function parseConfig({
 		...raw
 	}: {
 		baseCurrency: string
-		currencies: string
+		currencies?: string
 		errorLabel?: string
 	}) {
 
@@ -17,7 +17,7 @@ export function parseConfig({
 			.split(/[\s,]+/)
 			.map(c => c.trim())
 			.filter(c => c.length > 0)
-		: undefined
+		: [baseCurrency]
 
 	if (!currencies)
 		throw new Error(`${errorLabel} "currencies" attribute is required.`)

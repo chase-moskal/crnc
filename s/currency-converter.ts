@@ -18,8 +18,8 @@ import {ConverterDisplayOptions, ConverterParams, CurrencyConverter, CurrencyExc
 const currencyLibrary: CurrencyLibrary = defaultCurrencyLibrary
 
 export function makeCurrencyConverter({
-		currencies,
 		baseCurrency,
+		currencies = [baseCurrency],
 		locale = locale2(),
 		persistence = defaultPersistence(),
 		downloadExchangeRates = defaultDownloadExchangeRates,
@@ -29,19 +29,25 @@ export function makeCurrencyConverter({
 	const validated = validateConverterParams({baseCurrency, currencies, currencyLibrary})
 	currencies = validated.currencies
 	baseCurrency = validated.baseCurrency
+	const isOnlyBaseCurrency = currencies.length === 1
 
 	const snap = snapstate({
 		currencyPreference: baseCurrency as string,
 		exchangeRates: undefined as undefined | CurrencyExchangeRates,
 	})
 
-	const exchangeRatesDownload = rememberOrDownloadExchangeRates({
-			currencies,
-			persistence,
-			downloadExchangeRates,
-		})
-		.then(rates => snap.state.exchangeRates = rates)
-		.catch(() => {})
+	let exchangeRatesDownload: Promise<void | CurrencyExchangeRates>
+		= Promise.resolve()
+
+	if (!isOnlyBaseCurrency) {
+		exchangeRatesDownload = rememberOrDownloadExchangeRates({
+				currencies,
+				persistence,
+				downloadExchangeRates,
+			})
+			.then(rates => snap.state.exchangeRates = rates)
+			.catch(() => {})
+	}
 
 	function getAvailableCurrencies() {
 		const {exchangeRates} = snap.state

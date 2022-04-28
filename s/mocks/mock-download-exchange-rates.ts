@@ -4,13 +4,15 @@ import {exchangeRates as exampleExchangeRates} from "../currency-tools/testing-t
 
 const success = (): DownloadExchangeRates => async({currencies}) => {
 	const exchangeRates: CurrencyExchangeRates = {}
-	for (const code of currencies)
-		exchangeRates[code] = 1.0
+
+	for (const code of currencies) {
+		exchangeRates[code] = exampleExchangeRates.hasOwnProperty(code)
+			? (<any>exampleExchangeRates)[code]
+			: 1.0
+	}
+
 	return {
-		exchangeRates: {
-			...exchangeRates,
-			...exampleExchangeRates,
-		},
+		exchangeRates,
 	}
 }
 
