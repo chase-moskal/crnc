@@ -54,6 +54,7 @@ just sprinkle the `<crnc-price>` element in your html, wherever you need to disp
 - **`currency="eur"`** ***(optional)*** *currency code string*  
   override the user's currency preference, and demand that this price be shown in the specific currency.  
   however, if the currency is not available (maybe the exchange rates download failed), the *base-currency* will be used instead.  
+  ***don't be confused here:*** this is not specifying the currency of the input `value` — instead, this specifies what currency *the user should see.*  
   ```html
   <crnc-price value="1234.56" currency="eur"></crnc-price>
   ```
@@ -386,7 +387,8 @@ for these techniques, you'll need some experience with web development tools lik
       the value to present to the user. like `1234.56` for $1,234.56.
     - `options` ***(optional)*** *ConverterDisplayParams object*
       - `currency` ***(optional)*** *string*  
-        specify a currency to override the *targetCurrency.*
+        specify a currency to override the *targetCurrency.*  
+        ***don't be confused here:*** this is not specifying the currency of the input value — instead, this specifies the requested *output* currency.  
       - `precision` ***(optional)*** *integer number*  
         force a specific amount of precision to display the number.  
         eg, `3` gives you "$1,234.560",  
