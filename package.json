@@ -1,6 +1,6 @@
 {
 	"name": "crnc",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "currency conversion and functionality for the web",
 	"license": "MIT",
 	"type": "module",
